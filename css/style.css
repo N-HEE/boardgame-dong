@@ -25,3 +25,17 @@
     margin: 0;
     white-space: nowrap;
 }
+/* 방명록 항목 간격 넓히기 */
+.guestbook-item {
+    padding: 18px 0 22px;
+    line-height: 1.9;
+}
+
+.guestbook-item b {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.guestbook-item .meta {
+    margin-top: 8px;
+}
