@@ -404,7 +404,7 @@ function drawY(){
     <div class="dice-row">
       ${y.dice.map((d,i)=>`
         <button class="game-die ${y.held[i]?'held':''}" data-die="${i}">
-          ${d}
+          <img src="assets/dice-${d}.png" alt="주사위 ${d}">
         </button>
       `).join('')}
     </div>
@@ -1097,7 +1097,9 @@ function drawCant(aiTemp=null,aiActive=null){
 
     <div class="dice-row">
       ${c.dice.map(d=>`
-        <div class="game-die">${d}</div>
+        <div class="game-die">
+          <img src="assets/dice-${d}.png" alt="주사위 ${d}">
+        </div>
       `).join('')}
     </div>
 
