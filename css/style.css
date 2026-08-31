@@ -240,15 +240,15 @@
 }
 
 .dice-object {
-    left: 42%;
-    top: 34%;
+    left: 36%;
+    top: 38%;
     right: auto;
     bottom: auto;
     transform: rotate(-7deg);
 }
 
 .cards-object {
-    left: 53%;
+    left: 50%;
     top: 35%;
     right: auto;
     bottom: auto;
