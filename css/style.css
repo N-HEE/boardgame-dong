@@ -17,3 +17,11 @@
 .game-shell textarea {
     font-family: 'OngleipParkDahyeon', sans-serif;
 }
+/* 상단 사이트 제목을 화면 정중앙에 고정 */
+.topbar .brand {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    white-space: nowrap;
+}
