@@ -35,8 +35,8 @@ function bindTop(){
 function entry(){
   return `<div class="entry-overlay">
     <div class="entry-card">
-      <h1>OUR GAME TABLE</h1>
-      <p>초대받은 사람만 입장할 수 있습니다.</p>
+      <h1>BOARDGAME DONGARI</h1>
+      <p>너 누구야!</p>
       <input id="code" class="code-input" autocomplete="off" placeholder="INVITE CODE" maxlength="20">
       <button id="enter" class="primary">테이블에 앉기</button>
       <div id="entryErr" class="error"></div>
@@ -127,7 +127,7 @@ function home(){
                 <i></i><i></i><i></i><i></i><i></i><i></i>
               </span>
             </div>
-            <span class="object-label">YAHTZEE</span>
+            <span class="object-label">야추</span>
           </button>
         </div>
 
@@ -138,21 +138,21 @@ function home(){
               <div class="playing-card"></div>
               <div class="playing-card"></div>
             </div>
-            <span class="object-label">SEVEN</span>
+            <span class="object-label">filp 7</span>
           </button>
         </div>
 
         <div class="object box-object">
           <button id="goCant">
             <img src="assets/cantstop-box.png" alt="Can't Stop board game box">
-            <span class="object-label">CAN'T STOP</span>
+            <span class="object-label">캔트스탑</span>
           </button>
         </div>
 
         <div class="object notebook-object">
           <button id="goLeader">
             <img class="record-note-img" src="assets/record-note.png" alt="기록 노트">
-            <span class="object-label">기록 노트</span>
+            <span class="object-label">방명록</span>
           </button>
         </div>
 
@@ -185,7 +185,7 @@ function showSpeech(el,id){
 
   s.innerHTML=own
     ?`<span class="mail">✉</span><b>새 편지가 도착했습니다.</b><button>편지 열기</button>`
-    :`<b>${p.name}</b>의 자리입니다.`;
+    :`<b>${p.name}</b>!`;
 
   el.parentElement.appendChild(s);
 
@@ -295,7 +295,7 @@ function toast(t){
 function yahtzee(){
   baseGame(
     'YAHTZEE',
-    '주사위 5개를 최대 세 번 굴리고, 매 라운드 한 칸을 기록합니다. 13개 항목을 모두 채우면 종료됩니다.',
+    '야추! 하는 방법은 다들 알 테니까 생략.',
     'yahtzee'
   );
 
@@ -365,8 +365,8 @@ const cats=[
   ['fours','4의 합'],
   ['fives','5의 합'],
   ['sixes','6의 합'],
-  ['three','쓰리 오브 어 카인드'],
-  ['four','포 오브 어 카인드'],
+  ['three','같은 숫자 세 개'],
+  ['four','같은 숫자 네 개'],
   ['full','풀 하우스'],
   ['small','스몰 스트레이트'],
   ['large','라지 스트레이트'],
@@ -418,8 +418,8 @@ function drawY(){
 
     <div class="status">
       ${y.rolls===0
-        ?'굴리기를 눌러 시작하세요.'
-        :'원하는 주사위를 눌러 보관한 뒤 다시 굴리거나 점수 칸을 선택하세요.'
+        ?'굴리기를 눌러 시작!'
+        :'보관하고 싶은 주사위는 클릭하고 다시 굴리기. 그만 굴릴 거면 원하는 점수 칸 클릭.'
       }
     </div>
 
@@ -525,7 +525,7 @@ async function scoreY(cat){
 function seven(){
   baseGame(
     'SEVEN',
-    '서로 다른 숫자 7종을 모으면 즉시 +15 보너스. 같은 숫자가 다시 나오면 버스트입니다. 특수 카드가 점수를 바꿉니다. 총 7라운드의 합이 최종 기록입니다.',
+    '원하는 만큼 카드를 뒤집어서 겹치지 않아야 함. 겹치는 숫자가 나오는 즉시 해당 라운드는 0점. 그만 뒤집고 멈춘다면 지금까지 나온 숫자의 합이 점수. 7라운드 진행 후 높은 점수를 내야 한다! 중간에 곱하기와 더하기, 쉴드는 보너스 카드.',
     'seven'
   );
 
@@ -766,7 +766,7 @@ const heights={
 function cantstop(){
   baseGame(
     "CAN'T STOP",
-    '실제 캔트스탑의 핵심 규칙으로 CPU와 대결합니다. 4개 주사위를 두 쌍으로 나누고 최대 3개 열에서 러너를 전진시킵니다. 멈추기 전에 불가능한 눈이 나오면 이번 턴 진전은 전부 사라집니다. 먼저 3개 열을 완주하면 승리합니다.',
+    '캔트 스탑으로 CPU와 대결하기! 최대 3명의 등산객을 올릴 수 있고, 불가능한 경우 해당 말을 다 잃는다. 총 3곳의 정상을 먼저 찍으면 승리! 정상에 도달했더라도 그만하기를 눌러야 정상 등반으로 인정된다.',
     'cantstop'
   );
 
@@ -1086,7 +1086,7 @@ function drawCant(aiTemp=null,aiActive=null){
               c.claimed[n]
                 ?c.claimed[n]==='p'
                   ?' ★'
-                  :' ◆'
+                  :' ◇'
                 :''
             }
           </div>
@@ -1195,7 +1195,7 @@ async function leaderboard(){
             ></textarea>
 
             <button class="pencil-button">
-              남기기
+              등록
             </button>
 
           </form>
