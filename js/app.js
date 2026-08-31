@@ -784,6 +784,7 @@ function newCant(){
     pairs:[],
     phase:'player',
     turnRolls:0,
+    busts:0,
     ended:false
   };
 
@@ -872,6 +873,7 @@ function cRoll(){
   c.turnRolls++;
 
   if(!c.pairs.some(x=>x.ok>0)){
+  c.busts++;
     toast('버스트! 이번 턴의 진전을 잃었습니다.');
 
     c.temp={};
@@ -934,13 +936,43 @@ function checkWin(who){
     drawCant();
 
     if(who==='p'){
-      const score=1000+Math.max(0,30-c.turnRolls)*20;
+      const columnBonus={
+  2:500,
+  3:400,
+  4:300,
+  5:220,
+  6:160,
+  7:100,
+  8:160,
+  9:220,
+  10:300,
+  11:400,
+  12:500
+};
+
+const completedColumns=Object.entries(c.claimed)
+  .filter(([column,owner])=>owner==='p')
+  .map(([column])=>Number(column));
+
+const difficultyScore=completedColumns
+  .reduce((sum,column)=>sum+columnBonus[column],0);
+
+const speedBonus=Math.max(0,30-c.turnRolls)*15;
+
+const score=Math.max(
+  0,
+  1000+difficultyScore+speedBonus-(c.busts*30)
+);
 
       Store.addScore(
         user,
         'cantstop',
         score,
-        {turnRolls:c.turnRolls}
+{
+  turnRolls:c.turnRolls,
+  busts:c.busts,
+  columns:completedColumns
+}
       ).then(()=>loadSide('cantstop'));
 
       toast('승리! 기록 '+score)
