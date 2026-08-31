@@ -16,10 +16,10 @@ function home(){
  const positions={host:'host',somi:'somi',sieun:'sieun',hyunsu:'hyunsu',sugang:'sugang'};
  $('#app').innerHTML=`<main class="route"><div class="table-bg"></div><div class="table-shade"></div>${topbar()}<div class="home-stage">
  ${cfg().users.map(u=>`<div class="object meeple ${positions[u.id]} ${u.id===user.id?'mine':''}" data-person="${u.id}"><button><img src="${u.avatar}" alt="${u.name}"><span class="object-label">${u.name}</span></button></div>`).join('')}
- <div class="object dice-object"><button id="goYahtzee"><div class="dice-stack"><div class="die-art">⚄</div><div class="die-art">⚁</div></div><span class="object-label">YAHTZEE</span></button></div>
+ <div class="object dice-object"><button id="goYahtzee"><div class="dice-stack"><span class="real-die die-one"><i></i></span><span class="real-die die-six"><i></i><i></i><i></i><i></i><i></i><i></i></span></div><span class="object-label">YAHTZEE</span></button></div>
  <div class="object cards-object"><button id="goSeven"><div class="card-stack"><div class="playing-card"></div><div class="playing-card"></div><div class="playing-card"></div></div><span class="object-label">SEVEN</span></button></div>
- <div class="object box-object"><button id="goCant"><img src="https://www.gameology.com.au/cdn/shop/files/cantstop2021.jpg?v=1768438509&width=1946" alt="Can't Stop board game box"><span class="object-label">CAN'T STOP</span></button></div>
- <div class="object notebook-object"><button id="goLeader"><div class="notebook"><h3>Game Records</h3><p>scores & guestbook</p></div><span class="object-label">기록 노트</span></button></div>
+ <div class="object box-object"><button id="goCant"><img src="assets/games/cantstop-box.png" alt="Can't Stop board game box"><span class="object-label">CAN'T STOP</span></button></div>
+ <div class="object notebook-object"><button id="goLeader"><img class="record-note-img" src="assets/games/record-note.png" alt="기록 노트"><span class="object-label">기록 노트</span></button></div>
  </div></main>`;
  bindTop(); $('#goYahtzee').onclick=()=>navigate('yahtzee');$('#goSeven').onclick=()=>navigate('seven');$('#goCant').onclick=()=>navigate('cantstop');$('#goLeader').onclick=()=>navigate('leaderboard');
  $$('.meeple').forEach(el=>el.onclick=e=>showSpeech(el,el.dataset.person));
