@@ -6,7 +6,7 @@ window.SITE_CONFIG = {
   supabaseUrl: 'https://gzpjyfjdaixlvvauqfsn.supabase.co',
   supabaseAnonKey: 'sb_publishable_mWxDpw9Q2wXRdlkvd988kg_-0ABerPC',
   users: [
-    { id:'host',   name:'나',     code:'HOST',   avatar:'assets/characters/host.png' },
+    { id:'host',   name:'김준희',     code:'HOST',   avatar:'assets/characters/host.png' },
     { id:'somi',   name:'김소미', code:'SOMI',   avatar:'assets/characters/somi.png' },
     { id:'sieun',  name:'연시은', code:'SIEUN',  avatar:'assets/characters/sieun.png' },
     { id:'hyunsu', name:'차현수', code:'HYUNSU', avatar:'assets/characters/hyunsu.png' },
