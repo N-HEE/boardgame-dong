@@ -199,3 +199,74 @@
 .col-label {
     font-size: 15px;
 }
+.meeple.host {
+    left: 21%;
+    top: 29%;
+    right: auto;
+    bottom: auto;
+    transform: rotate(-5deg);
+}
+
+.meeple.somi {
+    left: 34%;
+    top: 18%;
+    right: auto;
+    bottom: auto;
+    transform: rotate(4deg);
+}
+
+.meeple.sieun {
+    left: auto;
+    right: 22%;
+    top: 26%;
+    bottom: auto;
+    transform: rotate(6deg);
+}
+
+.meeple.hyunsu {
+    left: 27%;
+    top: auto;
+    bottom: 16%;
+    right: auto;
+    transform: rotate(-7deg);
+}
+
+.meeple.sugang {
+    left: auto;
+    right: 23%;
+    top: auto;
+    bottom: 16%;
+    transform: rotate(5deg);
+}
+
+.dice-object {
+    left: 43%;
+    top: 34%;
+    right: auto;
+    bottom: auto;
+    transform: rotate(-4deg);
+}
+
+.cards-object {
+    left: 55%;
+    top: 35%;
+    right: auto;
+    bottom: auto;
+    transform: rotate(5deg);
+}
+
+.box-object {
+    left: 39%;
+    top: 55%;
+    bottom: auto;
+    right: auto;
+    transform: rotate(-5deg);
+}
+
+.notebook-object {
+    left: 54%;
+    top: 55%;
+    bottom: auto;
+    right: auto;
+    transform: rotate(4deg);
+}
