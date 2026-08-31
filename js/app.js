@@ -1,76 +1,1527 @@
-
 const App=(()=>{
 let user=null, state={};
+let guestPage=1;
+const GUESTS_PER_PAGE=5;
+
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const cfg=()=>window.SITE_CONFIG;
+
 function route(){return (location.hash||'#home').slice(1)}
 function saveUser(u){user=u;sessionStorage.setItem('bgt_user',u.id)}
 function loadUser(){const id=sessionStorage.getItem('bgt_user');user=cfg().users.find(x=>x.id===id)||null}
-function topbar(){return `<div class="topbar"><div class="brand">${cfg().title.toUpperCase()}</div>${user?`<div class="user-pill"><img src="${user.avatar}"><b>${user.name}</b><button id="logout">나가기</button></div>`:''}</div>`}
-function bindTop(){const b=$('#logout');if(b)b.onclick=()=>{sessionStorage.removeItem('bgt_user');user=null;render()}}
-function entry(){return `<div class="entry-overlay"><div class="entry-card"><h1>OUR GAME TABLE</h1><p>초대받은 사람만 입장할 수 있습니다.</p><input id="code" class="code-input" autocomplete="off" placeholder="INVITE CODE" maxlength="20"><button id="enter" class="primary">테이블에 앉기</button><div id="entryErr" class="error"></div></div></div>`}
-function bindEntry(){const go=()=>{const v=$('#code').value.trim().toUpperCase();const u=cfg().users.find(x=>x.code.toUpperCase()===v);if(!u){$('#entryErr').textContent='초대 코드를 다시 확인해 주세요.';return}saveUser(u);render()};$('#enter').onclick=go;$('#code').onkeydown=e=>{if(e.key==='Enter')go()};$('#code').focus()}
-function navigate(r){location.hash='#'+r}
-async function render(){loadUser();const r=route(); if(!user){$('#app').innerHTML=entry();bindEntry();return} if(r==='home')home(); else if(r==='yahtzee')yahtzee(); else if(r==='seven')seven(); else if(r==='cantstop')cantstop(); else if(r==='leaderboard')leaderboard(); else if(r.startsWith('letter'))letter(r.split('/')[1]||user.id); else navigate('home')}
-function home(){
- const positions={host:'host',somi:'somi',sieun:'sieun',hyunsu:'hyunsu',sugang:'sugang'};
- $('#app').innerHTML=`<main class="route"><div class="table-bg"></div><div class="table-shade"></div>${topbar()}<div class="home-stage">
- ${cfg().users.map(u=>`<div class="object meeple ${positions[u.id]} ${u.id===user.id?'mine':''}" data-person="${u.id}"><button><img src="${u.avatar}" alt="${u.name}"><span class="object-label">${u.name}</span></button></div>`).join('')}
- <div class="object dice-object"><button id="goYahtzee"><div class="dice-stack"><span class="real-die die-one"><i></i></span><span class="real-die die-six"><i></i><i></i><i></i><i></i><i></i><i></i></span></div><span class="object-label">YAHTZEE</span></button></div>
- <div class="object cards-object"><button id="goSeven"><div class="card-stack"><div class="playing-card"></div><div class="playing-card"></div><div class="playing-card"></div></div><span class="object-label">SEVEN</span></button></div>
- <div class="object box-object"><button id="goCant"><img src="assets/cantstop-box.png" alt="Can't Stop board game box"><span class="object-label">CAN'T STOP</span></button></div>
- <div class="object notebook-object"><button id="goLeader"><img class="record-note-img" src="assets/record-note.png" alt="기록 노트"><span class="object-label">기록 노트</span></button></div>
- </div></main>`;
- bindTop(); $('#goYahtzee').onclick=()=>navigate('yahtzee');$('#goSeven').onclick=()=>navigate('seven');$('#goCant').onclick=()=>navigate('cantstop');$('#goLeader').onclick=()=>navigate('leaderboard');
- $$('.meeple').forEach(el=>el.onclick=e=>showSpeech(el,el.dataset.person));
+
+function topbar(){
+  return `<div class="topbar">
+    <div class="brand">${cfg().title.toUpperCase()}</div>
+    ${user?`
+      <div class="user-pill">
+        <img src="${user.avatar}">
+        <b>${user.name}</b>
+        <button id="logout">나가기</button>
+      </div>
+    `:''}
+  </div>`
 }
-function showSpeech(el,id){$$('.speech').forEach(x=>x.remove());const p=cfg().users.find(x=>x.id===id);const own=id===user.id;const s=document.createElement('div');s.className='speech';s.style.left=(el.offsetLeft+el.offsetWidth*.65)+'px';s.style.top=(el.offsetTop-25)+'px';s.innerHTML=own?`<span class="mail">✉</span><b>새 편지가 도착했습니다.</b><button>편지 열기</button>`:`<b>${p.name}</b>의 자리입니다.`;el.parentElement.appendChild(s);if(own)$('button',s).onclick=ev=>{ev.stopPropagation();navigate('letter/'+id)};setTimeout(()=>{if(s.isConnected)s.remove()},5000)}
-function baseGame(title,desc,game){$('#app').innerHTML=`<main class="route"><button class="back-btn" id="back">← 테이블</button>${topbar()}<div class="game-shell"><section class="game-panel"><h1 class="game-title">${title}</h1><p class="game-desc">${desc}</p><div id="game"></div></section><aside class="sideboard"><h3>Leaderboard</h3><div id="sideScores">불러오는 중…</div></aside></div></main>`;bindTop();$('#back').onclick=()=>navigate('home');loadSide(game)}
-async function loadSide(game){const s=$('#sideScores');if(!s)return;try{let a=await Store.scores(game);const best={};a.forEach(x=>{if(best[x.user_id]==null||x.score>best[x.user_id].score)best[x.user_id]=x});a=Object.values(best).sort((a,b)=>b.score-a.score).slice(0,8);s.innerHTML=a.length?a.map((x,i)=>`<div class="score-row ${x.user_id===user.id?'me':''}"><span>${i+1}</span><span>${esc(x.user_name)}</span><b>${x.score.toLocaleString()}</b></div>`).join(''):'아직 기록이 없습니다.'}catch(e){s.textContent='기록을 불러오지 못했습니다.'}}
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function toast(t){let x=document.createElement('div');x.className='toast';x.textContent=t;document.body.appendChild(x);setTimeout(()=>x.remove(),2200)}
 
-// YAHTZEE
-function yahtzee(){baseGame('YAHTZEE','주사위 5개를 최대 세 번 굴리고, 매 라운드 한 칸을 기록합니다. 13개 항목을 모두 채우면 종료됩니다.','yahtzee');state.y={dice:[1,1,1,1,1],held:[false,false,false,false,false],rolls:0,scores:{},bonusYahtzee:0,ended:false};drawY()}
-function rollDice(){const y=state.y;if(y.ended||y.rolls>=3)return;for(let i=0;i<5;i++)if(!y.held[i])y.dice[i]`=1+Math.floor(Math.random()*6);y.rolls++;drawY()}
-function counts(d){const c=Array(7).fill(0);d.forEach(x=>c[x]++);return c}
-function yScore(cat,d){const c=counts(d),sum=d.reduce((a,b)=>a+b,0),uniq=[...new Set(d)].sort((a,b)=>a-b).join('');const yaht=c.some(n=>n===5);const joker=yaht && state.y.scores.yahtzee===50;switch(cat){case'ones':return c[1];case'twos':return c[2]*2;case'threes':return c[3]*3;case'fours':return c[4]*4;case'fives':return c[5]*5;case'sixes':return c[6]*6;case'three':return c.some(n=>n>=3)||joker?sum:0;case'four':return c.some(n=>n>=4)||joker?sum:0;case'full':return (c.includes(3)&&c.includes(2))||joker?25:0;case'small':return /1234|2345|3456/.test(uniq)||joker?30:0;case'large':return /12345|23456/.test(uniq)||joker?40:0;case'yahtzee':return yaht?50:0;case'chance':return sum}return 0}
-const cats=[['ones','1의 합'],['twos','2의 합'],['threes','3의 합'],['fours','4의 합'],['fives','5의 합'],['sixes','6의 합'],['three','쓰리 오브 어 카인드'],['four','포 오브 어 카인드'],['full','풀 하우스'],['small','스몰 스트레이트'],['large','라지 스트레이트'],['yahtzee','야추'],['chance','찬스']];
-function yTotals(){const y=state.y;const upper=['ones','twos','threes','fours','fives','sixes'].reduce((s,k)=>s+(y.scores[k]||0),0);const bonus=upper>=63?35:0;const base=Object.values(y.scores).reduce((a,b)=>a+b,0);return {upper,bonus,total:base+bonus+y.bonusYahtzee}}
-function drawY(){const y=state.y,t=yTotals();$('#game').innerHTML=`<div class="dice-row">${y.dice.map((d,i)=>`<button class="game-die ${y.held[i]?'held':''}" data-die="${i}">${d}</button>`).join('')}</div><div class="controls"><button id="roll" ${y.rolls>=3||y.ended?'disabled':''}>굴리기 (${y.rolls}/3)</button><button id="restartY">새 게임</button></div><div class="status">${y.rolls===0?'굴리기를 눌러 시작하세요.':'원하는 주사위를 눌러 보관한 뒤 다시 굴리거나 점수 칸을 선택하세요.'}</div><div class="yahtzee-grid">${cats.map(([k,n])=>{const used=k in y.scores;const p=y.rolls?yScore(k,y.dice):0;return `<button class="cat ${used?'used':''}" data-cat="${k}" ${used||!y.rolls||y.ended?'disabled':''}><span>${n}</span><b>${used?y.scores[k]:p}</b></button>`}).join('')}</div><div class="total-box">상단 ${t.upper} ${t.bonus?'+ 보너스 35':''} · 야추 보너스 ${y.bonusYahtzee} · <b>총점 ${t.total}</b></div>`;$$('[data-die]').forEach(b=>b.onclick=()=>{if(y.rolls>0&&y.rolls<3){const i=+b.dataset.die;y.held[i]=!y.held[i];drawY()}});$('#roll').onclick=rollDice;$('#restartY').onclick=()=>{state.y={dice:[1,1,1,1,1],held:[false,false,false,false,false],rolls:0,scores:{},bonusYahtzee:0,ended:false};drawY()};$$('[data-cat]').forEach(b=>b.onclick=()=>scoreY(b.dataset.cat))}
-async function scoreY(cat){const y=state.y;if(cat in y.scores||!y.rolls)return;const isYaht=counts(y.dice).some(n=>n===5);if(isYaht&&y.scores.yahtzee===50)y.bonusYahtzee+=100;y.scores[cat]=yScore(cat,y.dice);y.rolls=0;y.held=[false,false,false,false,false];if(Object.keys(y.scores).length===13){y.ended=true;drawY();const total=yTotals().total;await Store.addScore(user,'yahtzee',total,{scores:y.scores,bonusYahtzee:y.bonusYahtzee});toast('야추 기록 저장: '+total);loadSide('yahtzee')}else drawY()}
+function bindTop(){
+  const b=$('#logout');
+  if(b)b.onclick=()=>{
+    sessionStorage.removeItem('bgt_user');
+    user=null;
+    render()
+  }
+}
 
-// SEVEN - custom push-your-luck game
-function seven(){baseGame('SEVEN','서로 다른 숫자 7종을 모으면 즉시 +15 보너스. 같은 숫자가 다시 나오면 버스트입니다. 특수 카드가 점수를 바꿉니다. 총 7라운드의 합이 최종 기록입니다.','seven');newSeven()}
-function sevenDeck(){let d=[];for(let n=1;n<=10;n++)for(let i=0;i<n;i++)d.push({t:'n',v:n});d.push({t:'add',v:5},{t:'add',v:10},{t:'x2'},{t:'shield'},{t:'shield'},{t:'flip3'});for(let i=d.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]]}return d}
-function newSeven(){state.s={round:1,total:0,roundScore:0,cards:[],nums:new Set(),shield:0,mult:1,deck:sevenDeck(),ended:false,bust:false};drawS()}
-function sevenValue(){const s=state.s;const nums=s.cards.filter(c=>c.t==='n').reduce((a,c)=>a+c.v,0),adds=s.cards.filter(c=>c.t==='add').reduce((a,c)=>a+c.v,0);return (nums+adds)*s.mult+(s.nums.size>=7?15:0)}
-function drawCard(auto=false){const s=state.s;if(s.ended||s.bust)return;if(!s.deck.length)s.deck=sevenDeck();const c=s.deck.pop();if(c.t==='n'&&s.nums.has(c.v)){if(s.shield>0){s.shield--;s.cards.push({t:'blocked',v:c.v});toast('보호막이 중복 숫자를 막았습니다.')}else{s.cards.push({...c,bust:true});s.bust=true;s.roundScore=0;drawS();setTimeout(nextSevenRound,900);return}}else{if(c.t==='n')s.nums.add(c.v);if(c.t==='shield')s.shield++;if(c.t==='x2')s.mult*=2;s.cards.push(c)}s.roundScore=sevenValue();drawS();if(c.t==='flip3'){setTimeout(()=>{for(let i=0;i<3&&!s.bust;i++)drawCard(true)},220)}if(s.nums.size>=7){s.roundScore=sevenValue();toast('SEVEN! +15 보너스');setTimeout(()=>bankSeven(true),650)}}
-function cardHtml(c){if(c.t==='n')return `<div class="num-card ${c.bust?'bust':''}">${c.v}</div>`;if(c.t==='add')return `<div class="num-card mod">+${c.v}</div>`;if(c.t==='x2')return `<div class="num-card mod">×2</div>`;if(c.t==='shield')return `<div class="num-card mod">SHIELD</div>`;if(c.t==='flip3')return `<div class="num-card mod">FLIP 3</div>`;return `<div class="num-card mod">BLOCK ${c.v}</div>`}
-function drawS(){const s=state.s;$('#game').innerHTML=`<div>ROUND <b>${s.round}/7</b> · 누적 <b>${s.total}</b></div><div class="seven-table">${s.cards.map(cardHtml).join('')}</div><div class="big-score">${s.bust?'BUST':s.roundScore}</div><div class="status">다른 숫자 ${s.nums.size}/7 · 보호막 ${s.shield} · 배수 ×${s.mult}</div><div class="controls"><button id="drawS" ${s.bust||s.ended?'disabled':''}>한 장 더</button><button id="bankS" ${s.bust||s.ended||!s.cards.length?'disabled':''}>여기서 멈추기</button><button id="restartS">새 게임</button></div>`;$('#drawS').onclick=()=>drawCard();$('#bankS').onclick=()=>bankSeven(false);$('#restartS').onclick=newSeven}
-function bankSeven(){const s=state.s;if(s.ended||s.bust)return;s.total+=s.roundScore;nextSevenRound()}
-async function nextSevenRound(){const s=state.s;if(s.round>=7){s.ended=true;drawS();await Store.addScore(user,'seven',s.total,{});toast('SEVEN 기록 저장: '+s.total);loadSide('seven');return}s.round++;s.roundScore=0;s.cards=[];s.nums=new Set();s.shield=0;s.mult=1;s.bust=false;s.deck=sevenDeck();drawS()}
+function entry(){
+  return `<div class="entry-overlay">
+    <div class="entry-card">
+      <h1>OUR GAME TABLE</h1>
+      <p>초대받은 사람만 입장할 수 있습니다.</p>
+      <input id="code" class="code-input" autocomplete="off" placeholder="INVITE CODE" maxlength="20">
+      <button id="enter" class="primary">테이블에 앉기</button>
+      <div id="entryErr" class="error"></div>
+    </div>
+  </div>`
+}
 
-// CAN'T STOP vs CPU
-const heights={2:3,3:5,4:7,5:9,6:11,7:13,8:11,9:9,10:7,11:5,12:3};
-function cantstop(){baseGame("CAN'T STOP",'실제 캔트스탑의 핵심 규칙으로 CPU와 대결합니다. 4개 주사위를 두 쌍으로 나누고 최대 3개 열에서 러너를 전진시킵니다. 멈추기 전에 불가능한 눈이 나오면 이번 턴 진전은 전부 사라집니다. 먼저 3개 열을 완주하면 승리합니다.', 'cantstop');newCant()}
-function newCant(){state.c={p:emptyCols(),a:emptyCols(),claimed:{},temp:{},active:new Set(),dice:[],pairs:[],phase:'player',turnRolls:0,ended:false};drawCant()}
-function emptyCols(){const o={};for(let n=2;n<=12;n++)o[n]=0;return o}
-function roll4(){return Array.from({length:4},()=>1+Math.floor(Math.random()*6))}
-function pairings(d){return [[[d[0]+d[1],d[2]+d[3]]],[[d[0]+d[2],d[1]+d[3]]],[[d[0]+d[3],d[1]+d[2]]]].map(x=>x[0])}
-function canAdvanceNum(c,n){if(c.claimed[n])return false;if(c.active.has(n))return (c.temp[n]??c.p[n])<heights[n];if(c.active.size<3)return c.p[n]<heights[n];return false}
-function simPair(c,pair){let active=new Set(c.active),temp={...c.temp},ok=0;for(const n of pair){if(c.claimed[n])continue;let base=temp[n]??c.p[n];if(base>=heights[n])continue;if(!active.has(n)&&active.size>=3)continue;if(!active.has(n))active.add(n);temp[n]=base+1;ok++}return {ok,active,temp}}
-function cRoll(){const c=state.c;if(c.phase!=='player'||c.ended)return;c.dice=roll4();c.pairs=pairings(c.dice).map(p=>({p,...simPair(c,p)}));c.turnRolls++;if(!c.pairs.some(x=>x.ok>0)){toast('버스트! 이번 턴의 진전을 잃었습니다.');c.temp={};c.active=new Set();drawCant();setTimeout(aiTurn,900);return}drawCant()}
-function choosePair(i){const c=state.c,p=c.pairs[i];if(!p||!p.ok)return;c.active=p.active;c.temp=p.temp;c.pairs=[];drawCant()}
-function stopCant(){const c=state.c;if(c.phase!=='player'||!Object.keys(c.temp).length)return;for(const [k,v] of Object.entries(c.temp)){c.p[k]=v;if(v>=heights[k])c.claimed[k]='p'}c.temp={};c.active=new Set();c.pairs=[];if(checkWin('p'))return;drawCant();setTimeout(aiTurn,500)}
-function checkWin(who){const c=state.c;const n=Object.values(c.claimed).filter(x=>x===who).length;if(n>=3){c.ended=true;drawCant();if(who==='p'){const score=1000+Math.max(0,30-c.turnRolls)*20;Store.addScore(user,'cantstop',score,{turnRolls:c.turnRolls}).then(()=>loadSide('cantstop'));toast('승리! 기록 '+score)}else toast('CPU 승리. 다시 도전해 보세요.');return true}return false}
-async function aiTurn(){const c=state.c;if(c.ended)return;c.phase='ai';drawCant();let temp={},active=new Set(),rolls=0;while(true){await new Promise(r=>setTimeout(r,350));const d=roll4(),ps=pairings(d).map(p=>{let fake={claimed:c.claimed,active,temp,p:c.a};return {p,...simPair(fake,p)}}).filter(x=>x.ok);if(!ps.length){temp={};break}ps.sort((x,y)=>{const vx=x.p.reduce((s,n)=>s+(7-Math.abs(7-n)),0)+x.ok*5;const vy=y.p.reduce((s,n)=>s+(7-Math.abs(7-n)),0)+y.ok*5;return vy-vx});active=ps[0].active;temp=ps[0].temp;rolls++;drawCant(temp,active);const gain=Object.entries(temp).reduce((s,[k,v])=>s+(v-c.a[k]),0);if(rolls>=2 && (gain>=4 || Math.random()<Math.min(.18+rolls*.11,.72)))break}
- for(const [k,v] of Object.entries(temp)){c.a[k]=v;if(v>=heights[k])c.claimed[k]='a'}if(checkWin('a'))return;c.phase='player';c.temp={};c.active=new Set();c.pairs=[];drawCant()}
-function drawCant(aiTemp=null,aiActive=null){const c=state.c;const pp={...c.p,...c.temp},ap={...c.a,...(aiTemp||{})};$('#game').innerHTML=`<div class="status">${c.ended?'게임 종료':c.phase==='player'?'내 차례 — 주사위를 굴리고 조합을 고르세요.':'CPU가 생각 중…'} · 내 완주 ${Object.values(c.claimed).filter(x=>x==='p').length}/3 · CPU ${Object.values(c.claimed).filter(x=>x==='a').length}/3</div><div class="cant-grid">${Array.from({length:11},(_,ii)=>ii+2).map(n=>`<div class="col ${c.claimed[n]?'claimed':''}">${Array.from({length:heights[n]},(_,i)=>`<div class="cell ${i<pp[n]?'player':''} ${i<ap[n]?'ai':''} ${(c.active.has(n)&&i===pp[n]-1)?'runner':''}"></div>`).join('')}<div class="col-label">${n}${c.claimed[n]?c.claimed[n]==='p'?' ★':' ◆':''}</div></div>`).join('')}</div><div class="dice-row">${c.dice.map(d=>`<div class="game-die">${d}</div>`).join('')}</div><div class="pairings">${c.pairs.map((x,i)=>`<button class="pairing" data-pair="${i}" ${x.ok?'':'disabled'}>${x.p[0]} + ${x.p[1]}</button>`).join('')}</div><div class="controls"><button id="cRoll" ${c.phase!=='player'||c.pairs.length||c.ended?'disabled':''}>주사위 굴리기</button><button id="cStop" class="danger" ${c.phase!=='player'||!Object.keys(c.temp).length||c.ended?'disabled':''}>STOP · 확정하기</button><button id="cRestart">새 게임</button></div>`;$$('[data-pair]').forEach(b=>b.onclick=()=>choosePair(+b.dataset.pair));$('#cRoll').onclick=cRoll;$('#cStop').onclick=stopCant;$('#cRestart').onclick=newCant}
+function bindEntry(){
+  const go=()=>{
+    const v=$('#code').value.trim().toUpperCase();
+    const u=cfg().users.find(x=>x.code.toUpperCase()===v);
+
+    if(!u){
+      $('#entryErr').textContent='초대 코드를 다시 확인해 주세요.';
+      return
+    }
+
+    saveUser(u);
+    render()
+  };
+
+  $('#enter').onclick=go;
+  $('#code').onkeydown=e=>{
+    if(e.key==='Enter')go()
+  };
+  $('#code').focus()
+}
+
+function navigate(r){
+  location.hash='#'+r
+}
+
+async function render(){
+  loadUser();
+  const r=route();
+
+  if(!user){
+    $('#app').innerHTML=entry();
+    bindEntry();
+    return
+  }
+
+  if(r==='home')home();
+  else if(r==='yahtzee')yahtzee();
+  else if(r==='seven')seven();
+  else if(r==='cantstop')cantstop();
+  else if(r==='leaderboard')leaderboard();
+  else if(r.startsWith('letter'))letter(r.split('/')[1]||user.id);
+  else navigate('home')
+}
+
+/* =========================
+   HOME
+========================= */
+
+function home(){
+  const positions={
+    host:'host',
+    somi:'somi',
+    sieun:'sieun',
+    hyunsu:'hyunsu',
+    sugang:'sugang'
+  };
+
+  $('#app').innerHTML=`
+    <main class="route">
+      <div class="table-bg"></div>
+      <div class="table-shade"></div>
+
+      ${topbar()}
+
+      <div class="home-stage">
+
+        ${cfg().users.map(u=>`
+          <div class="object meeple ${positions[u.id]} ${u.id===user.id?'mine':''}" data-person="${u.id}">
+            <button>
+              <img src="${u.avatar}" alt="${u.name}">
+              <span class="object-label">${u.name}</span>
+            </button>
+          </div>
+        `).join('')}
+
+        <div class="object dice-object">
+          <button id="goYahtzee">
+            <div class="dice-stack">
+              <span class="real-die die-one"><i></i></span>
+              <span class="real-die die-six">
+                <i></i><i></i><i></i><i></i><i></i><i></i>
+              </span>
+            </div>
+            <span class="object-label">YAHTZEE</span>
+          </button>
+        </div>
+
+        <div class="object cards-object">
+          <button id="goSeven">
+            <div class="card-stack">
+              <div class="playing-card"></div>
+              <div class="playing-card"></div>
+              <div class="playing-card"></div>
+            </div>
+            <span class="object-label">SEVEN</span>
+          </button>
+        </div>
+
+        <div class="object box-object">
+          <button id="goCant">
+            <img src="assets/cantstop-box.png" alt="Can't Stop board game box">
+            <span class="object-label">CAN'T STOP</span>
+          </button>
+        </div>
+
+        <div class="object notebook-object">
+          <button id="goLeader">
+            <img class="record-note-img" src="assets/record-note.png" alt="기록 노트">
+            <span class="object-label">기록 노트</span>
+          </button>
+        </div>
+
+      </div>
+    </main>
+  `;
+
+  bindTop();
+
+  $('#goYahtzee').onclick=()=>navigate('yahtzee');
+  $('#goSeven').onclick=()=>navigate('seven');
+  $('#goCant').onclick=()=>navigate('cantstop');
+  $('#goLeader').onclick=()=>navigate('leaderboard');
+
+  $$('.meeple').forEach(el=>{
+    el.onclick=e=>showSpeech(el,el.dataset.person)
+  });
+}
+
+function showSpeech(el,id){
+  $$('.speech').forEach(x=>x.remove());
+
+  const p=cfg().users.find(x=>x.id===id);
+  const own=id===user.id;
+
+  const s=document.createElement('div');
+  s.className='speech';
+  s.style.left=(el.offsetLeft+el.offsetWidth*.65)+'px';
+  s.style.top=(el.offsetTop-25)+'px';
+
+  s.innerHTML=own
+    ?`<span class="mail">✉</span><b>새 편지가 도착했습니다.</b><button>편지 열기</button>`
+    :`<b>${p.name}</b>의 자리입니다.`;
+
+  el.parentElement.appendChild(s);
+
+  if(own){
+    $('button',s).onclick=ev=>{
+      ev.stopPropagation();
+      navigate('letter/'+id)
+    }
+  }
+
+  setTimeout(()=>{
+    if(s.isConnected)s.remove()
+  },5000)
+}
+
+/* =========================
+   COMMON GAME
+========================= */
+
+function baseGame(title,desc,game){
+  $('#app').innerHTML=`
+    <main class="route">
+
+      <button class="back-btn" id="back">← 테이블</button>
+
+      ${topbar()}
+
+      <div class="game-shell">
+
+        <section class="game-panel">
+          <h1 class="game-title">${title}</h1>
+          <p class="game-desc">${desc}</p>
+          <div id="game"></div>
+        </section>
+
+        <aside class="sideboard">
+          <h3>Leaderboard</h3>
+          <div id="sideScores">불러오는 중…</div>
+        </aside>
+
+      </div>
+    </main>
+  `;
+
+  bindTop();
+  $('#back').onclick=()=>navigate('home');
+
+  loadSide(game)
+}
+
+async function loadSide(game){
+  const s=$('#sideScores');
+  if(!s)return;
+
+  try{
+    let a=await Store.scores(game);
+    const best={};
+
+    a.forEach(x=>{
+      if(best[x.user_id]==null||x.score>best[x.user_id].score){
+        best[x.user_id]=x
+      }
+    });
+
+    a=Object.values(best)
+      .sort((a,b)=>b.score-a.score)
+      .slice(0,8);
+
+    s.innerHTML=a.length
+      ?a.map((x,i)=>`
+        <div class="score-row ${x.user_id===user.id?'me':''}">
+          <span>${i+1}</span>
+          <span>${esc(x.user_name)}</span>
+          <b>${x.score.toLocaleString()}</b>
+        </div>
+      `).join('')
+      :'아직 기록이 없습니다.';
+
+  }catch(e){
+    s.textContent='기록을 불러오지 못했습니다.'
+  }
+}
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g,c=>({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#39;'
+  }[c]))
+}
+
+function toast(t){
+  let x=document.createElement('div');
+  x.className='toast';
+  x.textContent=t;
+  document.body.appendChild(x);
+
+  setTimeout(()=>x.remove(),2200)
+}
+
+/* =========================
+   YAHTZEE
+========================= */
+
+function yahtzee(){
+  baseGame(
+    'YAHTZEE',
+    '주사위 5개를 최대 세 번 굴리고, 매 라운드 한 칸을 기록합니다. 13개 항목을 모두 채우면 종료됩니다.',
+    'yahtzee'
+  );
+
+  state.y={
+    dice:[1,1,1,1,1],
+    held:[false,false,false,false,false],
+    rolls:0,
+    scores:{},
+    bonusYahtzee:0,
+    ended:false
+  };
+
+  drawY()
+}
+
+function rollDice(){
+  const y=state.y;
+
+  if(y.ended||y.rolls>=3)return;
+
+  for(let i=0;i<5;i++){
+    if(!y.held[i]){
+      y.dice[i]=1+Math.floor(Math.random()*6)
+    }
+  }
+
+  y.rolls++;
+  drawY()
+}
+
+function counts(d){
+  const c=Array(7).fill(0);
+  d.forEach(x=>c[x]++);
+  return c
+}
+
+function yScore(cat,d){
+  const c=counts(d);
+  const sum=d.reduce((a,b)=>a+b,0);
+  const uniq=[...new Set(d)].sort((a,b)=>a-b).join('');
+  const yaht=c.some(n=>n===5);
+  const joker=yaht&&state.y.scores.yahtzee===50;
+
+  switch(cat){
+    case'ones':return c[1];
+    case'twos':return c[2]*2;
+    case'threes':return c[3]*3;
+    case'fours':return c[4]*4;
+    case'fives':return c[5]*5;
+    case'sixes':return c[6]*6;
+    case'three':return c.some(n=>n>=3)||joker?sum:0;
+    case'four':return c.some(n=>n>=4)||joker?sum:0;
+    case'full':return (c.includes(3)&&c.includes(2))||joker?25:0;
+    case'small':return /1234|2345|3456/.test(uniq)||joker?30:0;
+    case'large':return /12345|23456/.test(uniq)||joker?40:0;
+    case'yahtzee':return yaht?50:0;
+    case'chance':return sum
+  }
+
+  return 0
+}
+
+const cats=[
+  ['ones','1의 합'],
+  ['twos','2의 합'],
+  ['threes','3의 합'],
+  ['fours','4의 합'],
+  ['fives','5의 합'],
+  ['sixes','6의 합'],
+  ['three','쓰리 오브 어 카인드'],
+  ['four','포 오브 어 카인드'],
+  ['full','풀 하우스'],
+  ['small','스몰 스트레이트'],
+  ['large','라지 스트레이트'],
+  ['yahtzee','야추'],
+  ['chance','찬스']
+];
+
+function yTotals(){
+  const y=state.y;
+
+  const upper=[
+    'ones',
+    'twos',
+    'threes',
+    'fours',
+    'fives',
+    'sixes'
+  ].reduce((s,k)=>s+(y.scores[k]||0),0);
+
+  const bonus=upper>=63?35:0;
+  const base=Object.values(y.scores).reduce((a,b)=>a+b,0);
+
+  return {
+    upper,
+    bonus,
+    total:base+bonus+y.bonusYahtzee
+  }
+}
+
+function drawY(){
+  const y=state.y;
+  const t=yTotals();
+
+  $('#game').innerHTML=`
+    <div class="dice-row">
+      ${y.dice.map((d,i)=>`
+        <button class="game-die ${y.held[i]?'held':''}" data-die="${i}">
+          ${d}
+        </button>
+      `).join('')}
+    </div>
+
+    <div class="controls">
+      <button id="roll" ${y.rolls>=3||y.ended?'disabled':''}>
+        굴리기 (${y.rolls}/3)
+      </button>
+      <button id="restartY">새 게임</button>
+    </div>
+
+    <div class="status">
+      ${y.rolls===0
+        ?'굴리기를 눌러 시작하세요.'
+        :'원하는 주사위를 눌러 보관한 뒤 다시 굴리거나 점수 칸을 선택하세요.'
+      }
+    </div>
+
+    <div class="yahtzee-grid">
+      ${cats.map(([k,n])=>{
+        const used=k in y.scores;
+        const p=y.rolls?yScore(k,y.dice):0;
+
+        return `
+          <button
+            class="cat ${used?'used':''}"
+            data-cat="${k}"
+            ${used||!y.rolls||y.ended?'disabled':''}
+          >
+            <span>${n}</span>
+            <b>${used?y.scores[k]:p}</b>
+          </button>
+        `
+      }).join('')}
+    </div>
+
+    <div class="total-box">
+      상단 ${t.upper}
+      ${t.bonus?'+ 보너스 35':''}
+      · 야추 보너스 ${y.bonusYahtzee}
+      · <b>총점 ${t.total}</b>
+    </div>
+  `;
+
+  $$('[data-die]').forEach(b=>{
+    b.onclick=()=>{
+      if(y.rolls>0&&y.rolls<3){
+        const i=+b.dataset.die;
+        y.held[i]=!y.held[i];
+        drawY()
+      }
+    }
+  });
+
+  $('#roll').onclick=rollDice;
+
+  $('#restartY').onclick=()=>{
+    state.y={
+      dice:[1,1,1,1,1],
+      held:[false,false,false,false,false],
+      rolls:0,
+      scores:{},
+      bonusYahtzee:0,
+      ended:false
+    };
+
+    drawY()
+  };
+
+  $$('[data-cat]').forEach(b=>{
+    b.onclick=()=>scoreY(b.dataset.cat)
+  })
+}
+
+async function scoreY(cat){
+  const y=state.y;
+
+  if(cat in y.scores||!y.rolls)return;
+
+  const isYaht=counts(y.dice).some(n=>n===5);
+
+  if(isYaht&&y.scores.yahtzee===50){
+    y.bonusYahtzee+=100
+  }
+
+  y.scores[cat]=yScore(cat,y.dice);
+  y.rolls=0;
+  y.held=[false,false,false,false,false];
+
+  if(Object.keys(y.scores).length===13){
+    y.ended=true;
+    drawY();
+
+    const total=yTotals().total;
+
+    await Store.addScore(
+      user,
+      'yahtzee',
+      total,
+      {
+        scores:y.scores,
+        bonusYahtzee:y.bonusYahtzee
+      }
+    );
+
+    toast('야추 기록 저장: '+total);
+    loadSide('yahtzee')
+
+  }else{
+    drawY()
+  }
+}
+
+/* =========================
+   SEVEN
+========================= */
+
+function seven(){
+  baseGame(
+    'SEVEN',
+    '서로 다른 숫자 7종을 모으면 즉시 +15 보너스. 같은 숫자가 다시 나오면 버스트입니다. 특수 카드가 점수를 바꿉니다. 총 7라운드의 합이 최종 기록입니다.',
+    'seven'
+  );
+
+  newSeven()
+}
+
+function sevenDeck(){
+  let d=[];
+
+  for(let n=1;n<=10;n++){
+    for(let i=0;i<n;i++){
+      d.push({t:'n',v:n})
+    }
+  }
+
+  d.push(
+    {t:'add',v:5},
+    {t:'add',v:10},
+    {t:'x2'},
+    {t:'shield'},
+    {t:'shield'},
+    {t:'flip3'}
+  );
+
+  for(let i=d.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [d[i],d[j]]=[d[j],d[i]]
+  }
+
+  return d
+}
+
+function newSeven(){
+  state.s={
+    round:1,
+    total:0,
+    roundScore:0,
+    cards:[],
+    nums:new Set(),
+    shield:0,
+    mult:1,
+    deck:sevenDeck(),
+    ended:false,
+    bust:false
+  };
+
+  drawS()
+}
+
+function sevenValue(){
+  const s=state.s;
+
+  const nums=s.cards
+    .filter(c=>c.t==='n')
+    .reduce((a,c)=>a+c.v,0);
+
+  const adds=s.cards
+    .filter(c=>c.t==='add')
+    .reduce((a,c)=>a+c.v,0);
+
+  return (nums+adds)*s.mult+(s.nums.size>=7?15:0)
+}
+
+function drawCard(auto=false){
+  const s=state.s;
+
+  if(s.ended||s.bust)return;
+
+  if(!s.deck.length){
+    s.deck=sevenDeck()
+  }
+
+  const c=s.deck.pop();
+
+  if(c.t==='n'&&s.nums.has(c.v)){
+
+    if(s.shield>0){
+      s.shield--;
+      s.cards.push({t:'blocked',v:c.v});
+      toast('보호막이 중복 숫자를 막았습니다.')
+
+    }else{
+      s.cards.push({...c,bust:true});
+      s.bust=true;
+      s.roundScore=0;
+      drawS();
+
+      setTimeout(nextSevenRound,900);
+      return
+    }
+
+  }else{
+
+    if(c.t==='n')s.nums.add(c.v);
+    if(c.t==='shield')s.shield++;
+    if(c.t==='x2')s.mult*=2;
+
+    s.cards.push(c)
+  }
+
+  s.roundScore=sevenValue();
+  drawS();
+
+  if(c.t==='flip3'){
+    setTimeout(()=>{
+      for(let i=0;i<3&&!s.bust;i++){
+        drawCard(true)
+      }
+    },220)
+  }
+
+  if(s.nums.size>=7){
+    s.roundScore=sevenValue();
+    toast('SEVEN! +15 보너스');
+
+    setTimeout(()=>bankSeven(true),650)
+  }
+}
+
+function cardHtml(c){
+  if(c.t==='n'){
+    return `<div class="num-card ${c.bust?'bust':''}">${c.v}</div>`
+  }
+
+  if(c.t==='add'){
+    return `<div class="num-card mod">+${c.v}</div>`
+  }
+
+  if(c.t==='x2'){
+    return `<div class="num-card mod">×2</div>`
+  }
+
+  if(c.t==='shield'){
+    return `<div class="num-card mod">SHIELD</div>`
+  }
+
+  if(c.t==='flip3'){
+    return `<div class="num-card mod">FLIP 3</div>`
+  }
+
+  return `<div class="num-card mod">BLOCK ${c.v}</div>`
+}
+
+function drawS(){
+  const s=state.s;
+
+  $('#game').innerHTML=`
+    <div>
+      ROUND <b>${s.round}/7</b>
+      · 누적 <b>${s.total}</b>
+    </div>
+
+    <div class="seven-table">
+      ${s.cards.map(cardHtml).join('')}
+    </div>
+
+    <div class="big-score">
+      ${s.bust?'BUST':s.roundScore}
+    </div>
+
+    <div class="status">
+      다른 숫자 ${s.nums.size}/7
+      · 보호막 ${s.shield}
+      · 배수 ×${s.mult}
+    </div>
+
+    <div class="controls">
+      <button id="drawS" ${s.bust||s.ended?'disabled':''}>한 장 더</button>
+      <button id="bankS" ${s.bust||s.ended||!s.cards.length?'disabled':''}>여기서 멈추기</button>
+      <button id="restartS">새 게임</button>
+    </div>
+  `;
+
+  $('#drawS').onclick=()=>drawCard();
+  $('#bankS').onclick=()=>bankSeven(false);
+  $('#restartS').onclick=newSeven
+}
+
+function bankSeven(){
+  const s=state.s;
+
+  if(s.ended||s.bust)return;
+
+  s.total+=s.roundScore;
+  nextSevenRound()
+}
+
+async function nextSevenRound(){
+  const s=state.s;
+
+  if(s.round>=7){
+    s.ended=true;
+    drawS();
+
+    await Store.addScore(
+      user,
+      'seven',
+      s.total,
+      {}
+    );
+
+    toast('SEVEN 기록 저장: '+s.total);
+    loadSide('seven');
+
+    return
+  }
+
+  s.round++;
+  s.roundScore=0;
+  s.cards=[];
+  s.nums=new Set();
+  s.shield=0;
+  s.mult=1;
+  s.bust=false;
+  s.deck=sevenDeck();
+
+  drawS()
+}
+
+/* =========================
+   CAN'T STOP
+========================= */
+
+const heights={
+  2:3,
+  3:5,
+  4:7,
+  5:9,
+  6:11,
+  7:13,
+  8:11,
+  9:9,
+  10:7,
+  11:5,
+  12:3
+};
+
+function cantstop(){
+  baseGame(
+    "CAN'T STOP",
+    '실제 캔트스탑의 핵심 규칙으로 CPU와 대결합니다. 4개 주사위를 두 쌍으로 나누고 최대 3개 열에서 러너를 전진시킵니다. 멈추기 전에 불가능한 눈이 나오면 이번 턴 진전은 전부 사라집니다. 먼저 3개 열을 완주하면 승리합니다.',
+    'cantstop'
+  );
+
+  newCant()
+}
+
+function newCant(){
+  state.c={
+    p:emptyCols(),
+    a:emptyCols(),
+    claimed:{},
+    temp:{},
+    active:new Set(),
+    dice:[],
+    pairs:[],
+    phase:'player',
+    turnRolls:0,
+    ended:false
+  };
+
+  drawCant()
+}
+
+function emptyCols(){
+  const o={};
+
+  for(let n=2;n<=12;n++){
+    o[n]=0
+  }
+
+  return o
+}
+
+function roll4(){
+  return Array.from(
+    {length:4},
+    ()=>1+Math.floor(Math.random()*6)
+  )
+}
+
+function pairings(d){
+  return [
+    [d[0]+d[1],d[2]+d[3]],
+    [d[0]+d[2],d[1]+d[3]],
+    [d[0]+d[3],d[1]+d[2]]
+  ]
+}
+
+function canAdvanceNum(c,n){
+  if(c.claimed[n])return false;
+
+  if(c.active.has(n)){
+    return (c.temp[n]??c.p[n])<heights[n]
+  }
+
+  if(c.active.size<3){
+    return c.p[n]<heights[n]
+  }
+
+  return false
+}
+
+function simPair(c,pair){
+  let active=new Set(c.active);
+  let temp={...c.temp};
+  let ok=0;
+
+  for(const n of pair){
+
+    if(c.claimed[n])continue;
+
+    let base=temp[n]??c.p[n];
+
+    if(base>=heights[n])continue;
+    if(!active.has(n)&&active.size>=3)continue;
+
+    if(!active.has(n)){
+      active.add(n)
+    }
+
+    temp[n]=base+1;
+    ok++
+  }
+
+  return {
+    ok,
+    active,
+    temp
+  }
+}
+
+function cRoll(){
+  const c=state.c;
+
+  if(c.phase!=='player'||c.ended)return;
+
+  c.dice=roll4();
+  c.pairs=pairings(c.dice).map(p=>({
+    p,
+    ...simPair(c,p)
+  }));
+
+  c.turnRolls++;
+
+  if(!c.pairs.some(x=>x.ok>0)){
+    toast('버스트! 이번 턴의 진전을 잃었습니다.');
+
+    c.temp={};
+    c.active=new Set();
+
+    drawCant();
+
+    setTimeout(aiTurn,900);
+    return
+  }
+
+  drawCant()
+}
+
+function choosePair(i){
+  const c=state.c;
+  const p=c.pairs[i];
+
+  if(!p||!p.ok)return;
+
+  c.active=p.active;
+  c.temp=p.temp;
+  c.pairs=[];
+
+  drawCant()
+}
+
+function stopCant(){
+  const c=state.c;
+
+  if(c.phase!=='player'||!Object.keys(c.temp).length)return;
+
+  for(const [k,v] of Object.entries(c.temp)){
+    c.p[k]=v;
+
+    if(v>=heights[k]){
+      c.claimed[k]='p'
+    }
+  }
+
+  c.temp={};
+  c.active=new Set();
+  c.pairs=[];
+
+  if(checkWin('p'))return;
+
+  drawCant();
+  setTimeout(aiTurn,500)
+}
+
+function checkWin(who){
+  const c=state.c;
+
+  const n=Object.values(c.claimed)
+    .filter(x=>x===who)
+    .length;
+
+  if(n>=3){
+    c.ended=true;
+    drawCant();
+
+    if(who==='p'){
+      const score=1000+Math.max(0,30-c.turnRolls)*20;
+
+      Store.addScore(
+        user,
+        'cantstop',
+        score,
+        {turnRolls:c.turnRolls}
+      ).then(()=>loadSide('cantstop'));
+
+      toast('승리! 기록 '+score)
+
+    }else{
+      toast('CPU 승리. 다시 도전해 보세요.')
+    }
+
+    return true
+  }
+
+  return false
+}
+
+async function aiTurn(){
+  const c=state.c;
+
+  if(c.ended)return;
+
+  c.phase='ai';
+  drawCant();
+
+  let temp={};
+  let active=new Set();
+  let rolls=0;
+
+  while(true){
+    await new Promise(r=>setTimeout(r,350));
+
+    const d=roll4();
+
+    const ps=pairings(d)
+      .map(p=>{
+        let fake={
+          claimed:c.claimed,
+          active,
+          temp,
+          p:c.a
+        };
+
+        return {
+          p,
+          ...simPair(fake,p)
+        }
+      })
+      .filter(x=>x.ok);
+
+    if(!ps.length){
+      temp={};
+      break
+    }
+
+    ps.sort((x,y)=>{
+      const vx=x.p.reduce(
+        (s,n)=>s+(7-Math.abs(7-n)),
+        0
+      )+x.ok*5;
+
+      const vy=y.p.reduce(
+        (s,n)=>s+(7-Math.abs(7-n)),
+        0
+      )+y.ok*5;
+
+      return vy-vx
+    });
+
+    active=ps[0].active;
+    temp=ps[0].temp;
+    rolls++;
+
+    drawCant(temp,active);
+
+    const gain=Object.entries(temp)
+      .reduce(
+        (s,[k,v])=>s+(v-c.a[k]),
+        0
+      );
+
+    if(
+      rolls>=2 &&
+      (
+        gain>=4 ||
+        Math.random()<Math.min(.18+rolls*.11,.72)
+      )
+    ){
+      break
+    }
+  }
+
+  for(const [k,v] of Object.entries(temp)){
+    c.a[k]=v;
+
+    if(v>=heights[k]){
+      c.claimed[k]='a'
+    }
+  }
+
+  if(checkWin('a'))return;
+
+  c.phase='player';
+  c.temp={};
+  c.active=new Set();
+  c.pairs=[];
+
+  drawCant()
+}
+
+function drawCant(aiTemp=null,aiActive=null){
+  const c=state.c;
+  const pp={...c.p,...c.temp};
+  const ap={...c.a,...(aiTemp||{})};
+
+  $('#game').innerHTML=`
+    <div class="status">
+      ${
+        c.ended
+          ?'게임 종료'
+          :c.phase==='player'
+            ?'내 차례 — 주사위를 굴리고 조합을 고르세요.'
+            :'CPU가 생각 중…'
+      }
+      · 내 완주 ${Object.values(c.claimed).filter(x=>x==='p').length}/3
+      · CPU ${Object.values(c.claimed).filter(x=>x==='a').length}/3
+    </div>
+
+    <div class="cant-grid">
+      ${Array.from({length:11},(_,ii)=>ii+2).map(n=>`
+        <div class="col ${c.claimed[n]?'claimed':''}">
+
+          ${Array.from({length:heights[n]},(_,i)=>`
+            <div
+              class="cell
+                ${i<pp[n]?'player':''}
+                ${i<ap[n]?'ai':''}
+                ${(c.active.has(n)&&i===pp[n]-1)?'runner':''}
+              "
+            ></div>
+          `).join('')}
+
+          <div class="col-label">
+            ${n}
+            ${
+              c.claimed[n]
+                ?c.claimed[n]==='p'
+                  ?' ★'
+                  :' ◆'
+                :''
+            }
+          </div>
+
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="dice-row">
+      ${c.dice.map(d=>`
+        <div class="game-die">${d}</div>
+      `).join('')}
+    </div>
+
+    <div class="pairings">
+      ${c.pairs.map((x,i)=>`
+        <button
+          class="pairing"
+          data-pair="${i}"
+          ${x.ok?'':'disabled'}
+        >
+          ${x.p[0]} + ${x.p[1]}
+        </button>
+      `).join('')}
+    </div>
+
+    <div class="controls">
+      <button
+        id="cRoll"
+        ${c.phase!=='player'||c.pairs.length||c.ended?'disabled':''}
+      >
+        주사위 굴리기
+      </button>
+
+      <button
+        id="cStop"
+        class="danger"
+        ${c.phase!=='player'||!Object.keys(c.temp).length||c.ended?'disabled':''}
+      >
+        STOP · 확정하기
+      </button>
+
+      <button id="cRestart">
+        새 게임
+      </button>
+    </div>
+  `;
+
+  $$('[data-pair]').forEach(b=>{
+    b.onclick=()=>choosePair(+b.dataset.pair)
+  });
+
+  $('#cRoll').onclick=cRoll;
+  $('#cStop').onclick=stopCant;
+  $('#cRestart').onclick=newCant
+}
+
+/* =========================
+   기록 노트
+========================= */
 
 async function leaderboard(){
- $('#app').innerHTML=`<main class="route notebook-page"><button class="back-btn" id="back">← 테이블</button>${topbar()}<div class="book"><section class="page"><h2>전체 게임 기록</h2><div class="tabs"><button data-game="all">종합</button><button data-game="yahtzee">YAHTZEE</button><button data-game="seven">SEVEN</button><button data-game="cantstop">CAN'T STOP</button></div><div id="fullScores">불러오는 중…</div></section><section class="page"><h2>방명록</h2><form class="guest-form" id="guestForm"><textarea id="guestText" maxlength="500" placeholder="테이블에 한마디 남기기"></textarea><button class="pencil-button">등록</button></form><div id="guestList"></div></section></div></main>`;bindTop();$('#back').onclick=()=>navigate('home');$$('[data-game]').forEach(b=>b.onclick=()=>loadFull(b.dataset.game));$('#guestForm').onsubmit=async e=>{e.preventDefault();const t=$('#guestText').value.trim();if(!t)return;await Store.addGuest(user,t);$('#guestText').value='';loadGuests()};loadFull('all');loadGuests()}
-async function loadFull(g){const box=$('#fullScores');try{const all=await Store.scores(g==='all'?null:g);let rows=[];if(g==='all'){const per={};all.forEach(x=>{const k=x.user_id+'|'+x.game;if(!per[k]||x.score>per[k].score)per[k]=x});const totals={};Object.values(per).forEach(x=>{totals[x.user_id]??={name:x.user_name,total:0,count:0};totals[x.user_id].total+=x.score;totals[x.user_id].count++});rows=Object.values(totals).sort((a,b)=>b.total-a.total).map((x,i)=>({rank:i+1,name:x.name,score:x.total,game:x.count+' games'}))}else{const best={};all.forEach(x=>{if(!best[x.user_id]||x.score>best[x.user_id].score)best[x.user_id]=x});rows=Object.values(best).sort((a,b)=>b.score-a.score).map((x,i)=>({rank:i+1,name:x.user_name,score:x.score,game:g}))}box.innerHTML=rows.length?`<table class="leader-table"><thead><tr><th>#</th><th>이름</th><th>기록</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.rank}</td><td>${esc(r.name)}</td><td>${r.score.toLocaleString()}</td></tr>`).join('')}</tbody></table>`:'아직 기록이 없습니다.'}catch(e){box.textContent='기록을 불러오지 못했습니다.'}}
-async function loadGuests(){const box=$('#guestList');try{const a=await Store.guests();box.innerHTML=a.length?a.map(x=>`<div class="guestbook-item"><b>${esc(x.user_name)}</b><div>${esc(x.message).replace(/\n/g,'<br>')}</div><div class="meta">${new Date(x.created_at).toLocaleString('ko-KR')}</div></div>`).join(''):'첫 글을 남겨 주세요.'}catch{box.textContent='방명록을 불러오지 못했습니다.'}}
-function letter(id){if(id!==user.id){navigate('home');return}const p=cfg().users.find(x=>x.id===id)||user;$('#app').innerHTML=`<main class="route letter-route"><button class="back-btn" id="back">← 테이블</button>${topbar()}<article class="letter-paper"><h1>TO. ${esc(p.name)}</h1>${window.LETTERS[id]||'<p>편지가 아직 작성되지 않았습니다.</p>'}</article></main>`;bindTop();$('#back').onclick=()=>navigate('home')}
-window.addEventListener('hashchange',render);window.addEventListener('DOMContentLoaded',render);return {render};})();
+
+  guestPage=1;
+
+  $('#app').innerHTML=`
+    <main class="route notebook-page">
+
+      <button class="back-btn" id="back">
+        ← 테이블
+      </button>
+
+      ${topbar()}
+
+      <div class="book">
+
+        <section class="page">
+
+          <h2>전체 게임 기록</h2>
+
+          <div class="tabs">
+            <button data-game="all">종합</button>
+            <button data-game="yahtzee">YAHTZEE</button>
+            <button data-game="seven">SEVEN</button>
+            <button data-game="cantstop">CAN'T STOP</button>
+          </div>
+
+          <div id="fullScores">
+            불러오는 중…
+          </div>
+
+        </section>
+
+        <section class="page">
+
+          <h2>방명록</h2>
+
+          <form class="guest-form" id="guestForm">
+
+            <textarea
+              id="guestText"
+              maxlength="500"
+              placeholder="테이블에 한마디 남기기"
+            ></textarea>
+
+            <button class="pencil-button">
+              남기기
+            </button>
+
+          </form>
+
+          <div id="guestList"></div>
+
+        </section>
+
+      </div>
+    </main>
+  `;
+
+  bindTop();
+
+  $('#back').onclick=()=>navigate('home');
+
+  $$('[data-game]').forEach(b=>{
+    b.onclick=()=>loadFull(b.dataset.game)
+  });
+
+  $('#guestForm').onsubmit=async e=>{
+    e.preventDefault();
+
+    const t=$('#guestText').value.trim();
+
+    if(!t)return;
+
+    await Store.addGuest(user,t);
+
+    $('#guestText').value='';
+
+    guestPage=1;
+
+    loadGuests()
+  };
+
+  loadFull('all');
+  loadGuests()
+}
+
+/* =========================
+   전체 기록
+========================= */
+
+async function loadFull(g){
+
+  /* 현재 보고 있는 탭 표시 */
+  $$('[data-game]').forEach(btn=>{
+    btn.classList.toggle(
+      'active',
+      btn.dataset.game===g
+    )
+  });
+
+  const box=$('#fullScores');
+
+  try{
+    const all=await Store.scores(
+      g==='all'?null:g
+    );
+
+    let rows=[];
+
+    if(g==='all'){
+      const per={};
+
+      all.forEach(x=>{
+        const k=x.user_id+'|'+x.game;
+
+        if(!per[k]||x.score>per[k].score){
+          per[k]=x
+        }
+      });
+
+      const totals={};
+
+      Object.values(per).forEach(x=>{
+        totals[x.user_id]??={
+          name:x.user_name,
+          total:0,
+          count:0
+        };
+
+        totals[x.user_id].total+=x.score;
+        totals[x.user_id].count++
+      });
+
+      rows=Object.values(totals)
+        .sort((a,b)=>b.total-a.total)
+        .map((x,i)=>({
+          rank:i+1,
+          name:x.name,
+          score:x.total,
+          game:x.count+' games'
+        }));
+
+    }else{
+      const best={};
+
+      all.forEach(x=>{
+        if(
+          !best[x.user_id] ||
+          x.score>best[x.user_id].score
+        ){
+          best[x.user_id]=x
+        }
+      });
+
+      rows=Object.values(best)
+        .sort((a,b)=>b.score-a.score)
+        .map((x,i)=>({
+          rank:i+1,
+          name:x.user_name,
+          score:x.score,
+          game:g
+        }))
+    }
+
+    box.innerHTML=rows.length
+      ?`
+        <table class="leader-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>이름</th>
+              <th>기록</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            ${rows.map(r=>`
+              <tr>
+                <td>${r.rank}</td>
+                <td>${esc(r.name)}</td>
+                <td>${r.score.toLocaleString()}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+
+        </table>
+      `
+      :'아직 기록이 없습니다.';
+
+  }catch(e){
+    box.textContent='기록을 불러오지 못했습니다.'
+  }
+}
+
+/* =========================
+   방명록
+========================= */
+
+async function loadGuests(){
+  const box=$('#guestList');
+
+  try{
+    const a=await Store.guests();
+
+    if(!a.length){
+      box.innerHTML='첫 글을 남겨 주세요.';
+      return
+    }
+
+    const totalPages=Math.max(
+      1,
+      Math.ceil(a.length/GUESTS_PER_PAGE)
+    );
+
+    if(guestPage>totalPages){
+      guestPage=totalPages
+    }
+
+    if(guestPage<1){
+      guestPage=1
+    }
+
+    const start=(guestPage-1)*GUESTS_PER_PAGE;
+
+    const pageItems=a.slice(
+      start,
+      start+GUESTS_PER_PAGE
+    );
+
+    box.innerHTML=`
+
+      <div class="guest-items">
+
+        ${pageItems.map(x=>`
+          <div class="guestbook-item">
+
+            <b>
+              ${esc(x.user_name)}
+            </b>
+
+            <div>
+              ${esc(x.message).replace(/\n/g,'<br>')}
+            </div>
+
+            <div class="meta">
+              ${new Date(x.created_at).toLocaleString('ko-KR')}
+            </div>
+
+          </div>
+        `).join('')}
+
+      </div>
+
+      ${
+        totalPages>1
+          ?`
+            <div class="guest-pagination">
+
+              <button
+                id="guestPrev"
+                ${guestPage===1?'disabled':''}
+              >
+                ←
+              </button>
+
+              <div class="guest-page-numbers">
+
+                ${Array.from(
+                  {length:totalPages},
+                  (_,i)=>i+1
+                ).map(n=>`
+                  <button
+                    class="guest-page ${n===guestPage?'active':''}"
+                    data-page="${n}"
+                  >
+                    ${n}
+                  </button>
+                `).join('')}
+
+              </div>
+
+              <button
+                id="guestNext"
+                ${guestPage===totalPages?'disabled':''}
+              >
+                →
+              </button>
+
+            </div>
+          `
+          :''
+      }
+    `;
+
+    $('#guestPrev')?.addEventListener(
+      'click',
+      ()=>{
+        if(guestPage>1){
+          guestPage--;
+          loadGuests()
+        }
+      }
+    );
+
+    $('#guestNext')?.addEventListener(
+      'click',
+      ()=>{
+        if(guestPage<totalPages){
+          guestPage++;
+          loadGuests()
+        }
+      }
+    );
+
+    $$('[data-page]').forEach(btn=>{
+      btn.onclick=()=>{
+        guestPage=Number(btn.dataset.page);
+        loadGuests()
+      }
+    });
+
+  }catch(e){
+    box.textContent='방명록을 불러오지 못했습니다.'
+  }
+}
+
+/* =========================
+   LETTER
+========================= */
+
+function letter(id){
+  if(id!==user.id){
+    navigate('home');
+    return
+  }
+
+  const p=cfg().users.find(x=>x.id===id)||user;
+
+  $('#app').innerHTML=`
+    <main class="route letter-route">
+
+      <button class="back-btn" id="back">
+        ← 테이블
+      </button>
+
+      ${topbar()}
+
+      <article class="letter-paper">
+        <h1>TO. ${esc(p.name)}</h1>
+
+        ${
+          window.LETTERS[id]
+          ||'<p>편지가 아직 작성되지 않았습니다.</p>'
+        }
+      </article>
+
+    </main>
+  `;
+
+  bindTop();
+
+  $('#back').onclick=()=>navigate('home')
+}
+
+window.addEventListener(
+  'hashchange',
+  render
+);
+
+window.addEventListener(
+  'DOMContentLoaded',
+  render
+);
+
+return {render};
+
+})();
