@@ -3,10 +3,9 @@ const Store = (()=>{
   const cfg=()=>window.SITE_CONFIG||{};
   const shared=()=>Boolean(cfg().supabaseUrl && cfg().supabaseAnonKey);
   const headers=()=>({
-    'apikey':cfg().supabaseAnonKey,
-    'Authorization':'Bearer '+cfg().supabaseAnonKey,
-    'Content-Type':'application/json'
-  });
+  'apikey':cfg().supabaseAnonKey,
+  'Content-Type':'application/json'
+});
   async function sb(path,opts={}){
     const res=await fetch(cfg().supabaseUrl.replace(/\/$/,'')+'/rest/v1/'+path,{...opts,headers:{...headers(),...(opts.headers||{})}});
     if(!res.ok) throw new Error(await res.text());
