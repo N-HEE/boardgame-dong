@@ -89,3 +89,81 @@
     top: 0;
     transform: rotate(12deg);
 }
+/* ===== 메인 테이블 오브젝트 자연스럽게 흩어진 배치 ===== */
+
+/* 캐릭터 5명 */
+.meeple.host {
+    left: 26%;
+    top: 25%;
+    right: auto;
+    bottom: auto;
+    transform: rotate(-5deg);
+}
+
+.meeple.somi {
+    left: 11%;
+    top: 31%;
+    right: auto;
+    bottom: auto;
+    transform: rotate(4deg);
+}
+
+.meeple.sieun {
+    left: auto;
+    right: 15%;
+    top: 23%;
+    bottom: auto;
+    transform: rotate(6deg);
+}
+
+.meeple.hyunsu {
+    left: 19%;
+    top: auto;
+    bottom: 18%;
+    right: auto;
+    transform: rotate(-7deg);
+}
+
+.meeple.sugang {
+    left: auto;
+    right: 16%;
+    top: auto;
+    bottom: 20%;
+    transform: rotate(5deg);
+}
+
+/* 야추 주사위 */
+.dice-object {
+    left: 43%;
+    top: 39%;
+    right: auto;
+    bottom: auto;
+    transform: rotate(-4deg);
+}
+
+/* 세븐 카드 */
+.cards-object {
+    left: 61%;
+    top: 34%;
+    right: auto;
+    bottom: auto;
+    transform: rotate(5deg);
+}
+
+/* 캔트스탑 */
+.box-object {
+    left: 34%;
+    top: auto;
+    bottom: 17%;
+    right: auto;
+    transform: rotate(-5deg);
+}
+
+/* 기록 노트 */
+.notebook-object {
+    left: 56%;
+    top: auto;
+    bottom: 15%;
+    right: auto;
+    transform: rotate(4deg);
+}
