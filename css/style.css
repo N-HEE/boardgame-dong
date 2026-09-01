@@ -1,20 +1,76 @@
-@font-face{font-family:'NostalgicGukhanbakLovely';src:url('https://cdn.jsdelivr.net/gh/Project-Noonnu/2607161334@x-10/x/GriunXHangeulSarangseureoun-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face {
+    font-family: 'NostalgicGukhanbakLovely';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/2607161334@x-10/x/GriunXHangeulSarangseureoun-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+}
+
 @font-face {
     font-family: 'OngleipParkDahyeon';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2411-3@1.0/Ownglyph_ParkDaHyun.woff2') format('woff2');
     font-weight: normal;
     font-display: swap;
 }
-:root{--ink:#111;--paper:#fff;--red:#7c0e1a;--wood:#4a2617;--line:#111;--shadow:0 10px 25px #0005}*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Georgia,'Noto Serif KR',serif;background:#120708;color:#fff}button,input,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}.route{min-height:100vh;position:relative;overflow:auto}.table-bg{position:fixed;inset:0;background:url('../assets/table.png') center/cover no-repeat;z-index:0}.table-shade{display:none}.topbar{position:fixed;z-index:40;left:0;right:0;top:0;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:#16090a;color:#fff;border-bottom:1px solid #563536}.brand{font-weight:700;letter-spacing:.08em}.user-pill{display:flex;align-items:center;gap:9px;border:1px solid #654;padding:7px 10px;background:#fff;color:#111}.user-pill img{width:30px;height:30px;object-fit:contain}.user-pill button{border:0;background:#111;color:#fff;padding:6px 9px}.home-stage{position:relative;z-index:2;width:100vw;height:100vh;min-height:720px}.object{position:absolute;text-align:center}.object button{border:0;background:none;color:#fff;padding:0}.object-label{display:block;opacity:0;transform:translateY(3px);transition:.18s;font-size:12px;text-shadow:0 1px 3px #000}.object:hover .object-label{opacity:1;transform:none}.meeple{width:135px}.meeple img{width:100%;filter:drop-shadow(0 8px 5px #0008);transition:.18s}.meeple:hover img{transform:translateY(-6px)}.meeple.mine img{filter:drop-shadow(0 8px 5px #0008) drop-shadow(0 0 8px #fff4)}.meeple.host{left:11%;top:14%}.meeple.somi{left:22%;top:8%}.meeple.sieun{right:19%;top:8%}.meeple.hyunsu{left:12%;bottom:12%}.meeple.sugang{right:14%;bottom:12%}.dice-object{left:43%;top:20%;width:130px}.dice-stack{height:82px;display:flex;align-items:center;justify-content:center;gap:2px}.real-die{position:relative;display:block;width:58px;height:58px;border-radius:11px;background:linear-gradient(145deg,#fff 15%,#f1f1f1 58%,#cfcfcf);border:1px solid #bbb;box-shadow:inset 4px 4px 7px #fff,inset -5px -6px 9px #aaa8,0 9px 9px #0007}.real-die:first-child{transform:rotate(-16deg) translateY(7px)}.real-die:last-child{transform:rotate(17deg) translateY(-3px)}.real-die i{position:absolute;width:9px;height:9px;background:#111;border-radius:50%;box-shadow:inset 1px 1px 2px #000}.die-one i{left:24px;top:24px}.die-six i:nth-child(1){left:12px;top:10px}.die-six i:nth-child(2){right:12px;top:10px}.die-six i:nth-child(3){left:12px;top:24px}.die-six i:nth-child(4){right:12px;top:24px}.die-six i:nth-child(5){left:12px;bottom:10px}.die-six i:nth-child(6){right:12px;bottom:10px}.cards-object{left:56%;top:21%;width:115px}.card-stack{position:relative;height:95px}.playing-card{position:absolute;width:64px;height:90px;border-radius:6px;border:2px solid #fff;background:repeating-linear-gradient(45deg,#8e0f1d 0 5px,#b52232 5px 10px);box-shadow:0 5px 7px #0006}.playing-card:nth-child(1){transform:rotate(-12deg)}.playing-card:nth-child(2){left:16px;transform:rotate(1deg)}.playing-card:nth-child(3){left:31px;transform:rotate(12deg)}.box-object{left:38%;bottom:13%;width:185px}.box-object img{width:100%;filter:drop-shadow(0 12px 10px #0008)}.notebook-object{left:58%;bottom:10%;width:180px}.record-note-img{width:100%;filter:drop-shadow(0 10px 8px #0007);transform:rotate(3deg)}.speech{position:absolute;z-index:20;background:#fff;color:#111;border:1px solid #111;padding:10px 12px;min-width:205px;box-shadow:5px 5px 0 #1113}.speech button{display:block;margin-top:8px;background:#111;color:#fff;border:0;padding:6px 8px}.mail{margin-right:5px}.entry-overlay{position:fixed;inset:0;z-index:1000;background:#080504e8;display:grid;place-items:center;padding:20px}.entry-card{width:min(430px,94vw);padding:36px;background:#fff;border:1px solid #111;box-shadow:0 30px 90px #000;color:#111;text-align:center}.entry-card h1{font-size:26px;letter-spacing:.08em;margin:0 0 8px}.entry-card p{color:#555;font-size:13px}.code-input{width:100%;margin:22px 0 10px;padding:14px 12px;background:#fff;color:#111;border:2px solid #111;text-align:center;font-size:20px;letter-spacing:.14em;text-transform:uppercase}.primary{background:#111;color:#fff;border:1px solid #111;padding:10px 18px}.error{color:#a00;min-height:21px;margin-top:12px;font-size:13px}
-.game-shell{position:relative;z-index:3;min-height:100vh;padding:95px 300px 55px 42px;background:#f3f3f3;color:#111}.back-btn{position:fixed;top:20px;left:20px;z-index:50;background:#111;color:#fff;border:1px solid #111;padding:9px 13px}.game-panel{max-width:980px;margin:auto;background:#fff;border:1px solid #111;box-shadow:none;padding:28px;min-height:680px}.game-title{margin:0 0 4px;font-size:32px;letter-spacing:.05em;color:#111}.game-desc{margin:0 0 20px;color:#444;font-size:13px;line-height:1.6}.sideboard{position:fixed;right:28px;top:95px;width:240px;z-index:30;background:#fff;color:#111;padding:18px;border:1px solid #111;box-shadow:none;min-height:380px}.sideboard h3{font-family:Arial,sans-serif;font-style:normal;text-align:left;margin:0 0 15px;padding-bottom:10px;border-bottom:2px solid #111}.score-row{font-family:Arial,'Noto Sans KR',sans-serif;font-style:normal;display:grid;grid-template-columns:22px 1fr auto;gap:6px;border-bottom:1px solid #ddd;padding:9px 0;font-size:14px}.score-row.me{font-weight:700;color:#111;background:#f5f5f5}.dice-row{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}.game-die{width:72px;height:72px;border-radius:8px;background:#fff;color:#111;display:grid;place-items:center;font:bold 41px Arial;box-shadow:0 3px 8px #0002;border:1px solid #111}.game-die.held{outline:3px solid #111;transform:translateY(-5px)}.controls{display:flex;gap:10px;flex-wrap:wrap}.controls button{background:#111;color:#fff;border:1px solid #111;padding:9px 13px}.controls button.danger{background:#fff;color:#111}.controls button:disabled{opacity:.35;cursor:not-allowed}.status{margin:15px 0;padding:10px 12px;background:#fff;border:1px solid #111;line-height:1.6}.yahtzee-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;margin-top:20px}.cat{display:flex;justify-content:space-between;gap:10px;background:#fff;color:#111;padding:9px 10px;border:1px solid #111;text-align:left}.cat.used{background:#eee;color:#777}.total-box{margin-top:15px;font-size:20px}.seven-table{display:flex;gap:9px;flex-wrap:wrap;min-height:125px;margin:18px 0}.num-card{width:73px;height:108px;border-radius:0;background:#fff;color:#111;border:1px solid #111;display:grid;place-items:center;font:bold 34px Georgia;box-shadow:none}.num-card.mod{background:#111;color:#fff;border-color:#111;font-size:19px}.num-card.bust{background:#fff;color:#111;border:4px double #111}.big-score{font-size:42px;font-weight:bold;color:#111}.cant-grid{display:grid;grid-template-columns:repeat(11,1fr);gap:5px;align-items:end;height:380px;margin:18px 0}.col{display:flex;flex-direction:column-reverse;align-items:center;gap:2px}.cell{width:100%;min-width:27px;height:22px;background:#fff;border:1px solid #999;position:relative}.cell.player:after{content:'●';color:#111;position:absolute;inset:-2px 0 0;text-align:center}.cell.ai:before{content:'○';color:#111;position:absolute;inset:-2px 0 0;text-align:center}.cell.runner{box-shadow:inset 0 0 0 3px #111}.col-label{font-size:12px;margin-top:4px;color:#111}.claimed{color:#111;font-weight:bold}.pairings{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.pairing{padding:8px 11px;background:#fff;color:#111;border:1px solid #111}.pairing:disabled{opacity:.35}
-.notebook-page{position:relative;z-index:3;min-height:100vh;background:#f3f3f3;padding:90px 20px 40px;color:#111}.book{max-width:1050px;margin:auto;background:#fff;color:#111;min-height:760px;border:1px solid #111;box-shadow:none;display:grid;grid-template-columns:1fr 1fr;position:relative;font-family:'NostalgicGukhanbakLovely','Noto Sans KR',sans-serif}.book:after{content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;background:#111}.page{padding:42px 45px;background:#fff}.page h2,.page h3{font-family:'NostalgicGukhanbakLovely','Noto Sans KR',sans-serif;font-style:normal}.leader-table{font-family:'NostalgicGukhanbakLovely','Noto Sans KR',sans-serif;font-style:normal;width:100%;border-collapse:collapse}.leader-table td,.leader-table th{padding:9px 5px;border-bottom:1px solid #111;text-align:left}.tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}.tabs button{border:1px solid #111;background:#fff;color:#111;padding:7px 10px}.tabs button:hover{background:#111;color:#fff}.guest-form textarea{width:100%;min-height:90px;background:#fff;border:1px solid #111;padding:8px}.guestbook-item{padding:9px 0;border-bottom:1px solid #111}.guestbook-item .meta{font-size:12px;color:#666}.pencil-button{background:#111;color:#fff;border:1px solid #111;padding:8px 11px;margin-top:7px}.letter-route{position:relative;z-index:3;min-height:100vh;background:#f3f3f3;padding:90px 20px}.letter-paper{max-width:760px;min-height:700px;margin:auto;background:#fff;color:#111;border:1px solid #111;padding:60px 70px;box-shadow:none;line-height:2;font-family:'NostalgicGukhanbakLovely','Noto Serif KR',serif}.letter-paper h1{font-size:27px;margin-top:0}.letter-placeholder{opacity:.45;border:1px dashed #777;padding:10px}.toast{position:fixed;z-index:2000;bottom:24px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:10px 15px;border:1px solid #fff}
-@media(max-width:900px){.game-shell{padding:90px 18px 390px}.sideboard{position:absolute;left:18px;right:18px;top:auto;bottom:20px;width:auto}.home-stage{transform:scale(.85);transform-origin:center}.book{grid-template-columns:1fr}.book:after{display:none}.meeple{width:105px}.box-object{width:150px}.notebook-object{width:145px}}@media(max-width:600px){.home-stage{width:120vw;height:76vh;margin-left:-10vw;transform:scale(.78)}.game-panel{padding:16px}.yahtzee-grid{grid-template-columns:1fr}.cant-grid{gap:2px;height:310px}.cell{min-width:18px;height:18px}.letter-paper{padding:35px 25px}.topbar .brand{display:none}}
-.game-shell,
-.game-shell button,
-.game-shell input,
-.game-shell select,
-.game-shell textarea {
-    font-family: 'OngleipParkDahyeon', sans-serif;
+
+:root {
+    --ink: #111;
+    --paper: #fff;
+    --red: #7c0e1a;
+    --wood: #4a2617;
+    --line: #111;
+    --shadow: 0 10px 25px #0005;
+}
+
+* { box-sizing: border-box; }
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+    font-family: Georgia, 'Noto Serif KR', serif;
+    background: #120708;
+    color: #fff;
+}
+
+button,
+input,
+textarea { font: inherit; }
+
+button { cursor: pointer; }
+
+.hidden { display: none !important; }
+
+.route {
+    min-height: 100vh;
+    position: relative;
+    overflow: auto;
+}
+
+/* ===== TABLE / TOP BAR ===== */
+
+.table-bg {
+    position: fixed;
+    inset: 0;
+    background: url('../assets/table.png') center / cover no-repeat;
+    z-index: 0;
+}
+
+.table-shade { display: none; }
+
+.topbar {
+    position: fixed;
+    z-index: 40;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    background: #16090a;
+    color: #fff;
+    border-bottom: 1px solid #563536;
 }
 
 .topbar .brand {
@@ -24,29 +80,449 @@
     transform: translate(-50%, -50%);
     margin: 0;
     white-space: nowrap;
+    font-weight: 700;
+    letter-spacing: .08em;
 }
 
-.topbar .user-pill {
-    margin-left: auto;
+.topbar .user-pill { margin-left: auto; }
+
+.user-pill {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    border: 1px solid #654;
+    padding: 7px 10px;
+    background: #fff;
+    color: #111;
+}
+
+.user-pill img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
+
+.user-pill button {
+    border: 0;
+    background: #111;
+    color: #fff;
+    padding: 6px 9px;
 }
 
 .back-btn {
+    position: fixed;
     top: 18px;
     left: 20px;
+    z-index: 50;
+    background: #111;
+    color: #fff;
+    border: 1px solid #111;
+    padding: 9px 13px;
 }
 
-.guestbook-item {
-    padding: 18px 0 22px;
-    line-height: 1.9;
+/* ===== HOME ===== */
+
+.home-stage {
+    position: relative;
+    z-index: 2;
+    width: 100vw;
+    height: 100vh;
+    min-height: 720px;
+    transform: none;
+    transform-origin: center top;
 }
 
-.guestbook-item b {
+.object {
+    position: absolute;
+    text-align: center;
+}
+
+.home-stage .object { z-index: 5; }
+
+.object button {
+    border: 0;
+    background: none;
+    color: #fff;
+    padding: 0;
+}
+
+.home-stage .object > button {
+    position: relative;
+    z-index: 2;
     display: block;
-    margin-bottom: 8px;
 }
 
-.guestbook-item .meta {
+.home-stage .object img,
+.home-stage .dice-stack,
+.home-stage .card-stack,
+.home-stage .trpg-folder {
+    pointer-events: none;
+}
+
+.object-label {
+    display: block;
+    opacity: 0;
+    transform: translateY(3px);
+    transition: .18s;
+    font-size: 12px;
+    text-shadow: 0 1px 3px #000;
+}
+
+.object:hover .object-label {
+    opacity: 1;
+    transform: none;
+}
+
+/* 미플: 전부 left + top 기준.
+   왼쪽부터 수강 - 소미 - 현수 - 준희 - 시은 */
+.meeple {
+    width: 135px;
+    transform: translateX(-50%);
+}
+
+.meeple img {
+    width: 100%;
+    filter: drop-shadow(0 8px 5px #0008);
+    transition: .18s;
+}
+
+.meeple:hover img { transform: translateY(-6px); }
+
+.meeple.mine img {
+    filter:
+        drop-shadow(0 8px 5px #0008)
+        drop-shadow(0 0 8px #fff4);
+}
+
+.meeple.sugang {
+    left: 25%;
+    top: 22%;
+}
+
+.meeple.somi {
+    left: 37.5%;
+    top: 20%;
+}
+
+.meeple.hyunsu {
+    left: 50%;
+    top: 19%;
+}
+
+.meeple.host {
+    left: 62.5%;
+    top: 20%;
+}
+
+.meeple.sieun {
+    left: 75%;
+    top: 22%;
+}
+
+/* 홈 게임 오브젝트 */
+.dice-object {
+    left: 37%;
+    top: 42%;
+    width: 130px;
+    transform: rotate(-7deg);
+}
+
+.cards-object {
+    left: 51%;
+    top: 40%;
+    width: 115px;
+    transform: rotate(6deg);
+}
+
+.box-object {
+    left: 29%;
+    top: 59%;
+    width: 185px;
+    transform: rotate(-5deg);
+}
+
+.notebook-object {
+    left: 47%;
+    top: 58%;
+    width: 180px;
+    transform: rotate(5deg);
+}
+
+.box-object img {
+    width: 100%;
+    filter: drop-shadow(0 12px 10px #0008);
+}
+
+.record-note-img {
+    width: 100%;
+    filter: drop-shadow(0 10px 8px #0007);
+    transform: rotate(3deg);
+}
+
+/* 홈 주사위 */
+.dice-stack {
+    position: relative;
+    width: 110px;
+    height: 82px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+}
+
+.real-die {
+    position: relative;
+    display: block;
+    width: 58px;
+    height: 58px;
+    border-radius: 11px;
+    background: linear-gradient(145deg, #fff 15%, #f1f1f1 58%, #cfcfcf);
+    border: 1px solid #bbb;
+    box-shadow:
+        inset 4px 4px 7px #fff,
+        inset -5px -6px 9px #aaa8,
+        0 9px 9px #0007;
+}
+
+.real-die:first-child { transform: rotate(-16deg) translateY(7px); }
+.real-die:last-child { transform: rotate(17deg) translateY(-3px); }
+
+.real-die i {
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    background: #111;
+    border-radius: 50%;
+    box-shadow: inset 1px 1px 2px #000;
+}
+
+.die-one i { left: 24px; top: 24px; }
+.die-six i:nth-child(1) { left: 12px; top: 10px; }
+.die-six i:nth-child(2) { right: 12px; top: 10px; }
+.die-six i:nth-child(3) { left: 12px; top: 24px; }
+.die-six i:nth-child(4) { right: 12px; top: 24px; }
+.die-six i:nth-child(5) { left: 12px; bottom: 10px; }
+.die-six i:nth-child(6) { right: 12px; bottom: 10px; }
+
+/* 현재 홈 카드 */
+.card-stack {
+    position: relative;
+    height: 95px;
+}
+
+.playing-card {
+    position: absolute;
+    width: 64px;
+    height: 90px;
+    border-radius: 6px;
+    border: 2px solid #fff;
+    background: repeating-linear-gradient(
+        45deg,
+        #8e0f1d 0 5px,
+        #b52232 5px 10px
+    );
+    box-shadow: 0 5px 7px #0006;
+}
+
+.playing-card:nth-child(1) { transform: rotate(-12deg); }
+.playing-card:nth-child(2) { left: 16px; transform: rotate(1deg); }
+.playing-card:nth-child(3) { left: 31px; transform: rotate(12deg); }
+
+/* 실제 PNG 주사위가 쓰이는 경우 */
+.home-die {
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 6px #0007);
+}
+
+.home-die-a {
+    left: 3px;
+    top: 8px;
+    transform: rotate(-14deg);
+}
+
+.home-die-b {
+    right: 3px;
+    top: 0;
+    transform: rotate(12deg);
+}
+
+/* 말풍선 */
+.speech {
+    position: absolute;
+    z-index: 20;
+    background: #fff;
+    color: #111;
+    border: 1px solid #111;
+    padding: 10px 12px;
+    min-width: 205px;
+    box-shadow: 5px 5px 0 #1113;
+}
+
+.speech button {
+    display: block;
     margin-top: 8px;
+    background: #111;
+    color: #fff;
+    border: 0;
+    padding: 6px 8px;
+}
+
+.mail { margin-right: 5px; }
+
+/* ===== ENTRY ===== */
+
+.entry-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: #080504e8;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+}
+
+.entry-card {
+    width: min(430px, 94vw);
+    padding: 36px;
+    background: #fff;
+    border: 1px solid #111;
+    box-shadow: 0 30px 90px #000;
+    color: #111;
+    text-align: center;
+}
+
+.entry-card h1 {
+    font-size: 26px;
+    letter-spacing: .08em;
+    margin: 0 0 8px;
+}
+
+.entry-card p {
+    color: #555;
+    font-size: 13px;
+}
+
+.code-input {
+    width: 100%;
+    margin: 22px 0 10px;
+    padding: 14px 12px;
+    background: #fff;
+    color: #111;
+    border: 2px solid #111;
+    text-align: center;
+    font-size: 20px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+}
+
+.primary {
+    background: #111;
+    color: #fff;
+    border: 1px solid #111;
+    padding: 10px 18px;
+}
+
+.error {
+    color: #a00;
+    min-height: 21px;
+    margin-top: 12px;
+    font-size: 13px;
+}
+
+/* ===== GAME PAGES ===== */
+
+.game-shell {
+    position: relative;
+    z-index: 3;
+    min-height: 100vh;
+    padding: 95px 300px 55px 42px;
+    background: #f3f3f3;
+    color: #111;
+    font-family: 'OngleipParkDahyeon', sans-serif;
+    font-size: 18px;
+}
+
+.game-shell button,
+.game-shell input,
+.game-shell select,
+.game-shell textarea {
+    font-family: 'OngleipParkDahyeon', sans-serif;
+}
+
+.game-panel {
+    max-width: 980px;
+    margin: auto;
+    background: #fff;
+    border: 1px solid #111;
+    box-shadow: none;
+    padding: 28px;
+    min-height: 680px;
+}
+
+.game-title {
+    margin: 0 0 4px;
+    font-size: 42px;
+    letter-spacing: .05em;
+    color: #111;
+}
+
+.game-desc {
+    margin: 0 0 20px;
+    color: #444;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+.sideboard {
+    position: fixed;
+    right: 28px;
+    top: 95px;
+    width: 240px;
+    z-index: 30;
+    background: #fff;
+    color: #111;
+    padding: 18px;
+    border: 1px solid #111;
+    box-shadow: none;
+    min-height: 380px;
+}
+
+.sideboard h3 {
+    font-family: Arial, sans-serif;
+    font-style: normal;
+    text-align: left;
+    margin: 0 0 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #111;
+    font-size: 20px;
+}
+
+.score-row {
+    font-family: Arial, 'Noto Sans KR', sans-serif;
+    font-style: normal;
+    display: grid;
+    grid-template-columns: 22px 1fr auto;
+    gap: 6px;
+    border-bottom: 1px solid #ddd;
+    padding: 9px 0;
+    font-size: 17px;
+}
+
+.score-row.me {
+    font-weight: 700;
+    color: #111;
+    background: #f5f5f5;
+}
+
+.dice-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 18px 0;
 }
 
 .game-die {
@@ -72,304 +548,512 @@
     transform: translateY(-5px);
 }
 
-.dice-stack {
-    position: relative;
-    width: 110px;
-    height: 82px;
-    margin: auto;
+.controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-.home-die {
-    position: absolute;
-    width: 64px;
-    height: 64px;
-    object-fit: contain;
-    filter: drop-shadow(0 8px 6px #0007);
-}
-
-.home-die-a {
-    left: 3px;
-    top: 8px;
-    transform: rotate(-14deg);
-}
-
-.home-die-b {
-    right: 3px;
-    top: 0;
-    transform: rotate(12deg);
-}
-
-.meeple.host {
-    left: auto;
-    right: 8%;
-    top: 15%;
-    right: auto;
-    bottom: auto;
-    transform: rotate(-5deg);
-}
-
-.meeple.somi {
-    left: 7%;
-    top: 15%;
-    right: auto;
-    bottom: auto;
-    transform: rotate(4deg);
-}
-
-.meeple.sieun {
-    left: auto;
-    right: 9%;
-    top: 23%;
-    bottom: auto;
-    transform: rotate(6deg);
-}
-
-.meeple.hyunsu {
-    left: 19%;
-    top: auto;
-    bottom: 18%;
-    right: auto;
-    transform: rotate(-7deg);
-}
-
-.meeple.sugang {
-    left: auto;
-    right: 9%;
-    top: auto;
-    bottom: 20%;
-    transform: rotate(5deg);
-}
-
-.dice-object {
-    left: 43%;
-    top: 39%;
-    right: auto;
-    bottom: auto;
-    transform: rotate(-4deg);
-}
-
-.cards-object {
-    left: 61%;
-    top: 34%;
-    right: auto;
-    bottom: auto;
-    transform: rotate(5deg);
-}
-
-.box-object {
-    left: 34%;
-    top: auto;
-    bottom: 17%;
-    right: auto;
-    transform: rotate(-5deg);
-}
-
-.notebook-object {
-    left: 56%;
-    top: auto;
-    bottom: 15%;
-    right: auto;
-    transform: rotate(4deg);
-}
-
-.game-shell {
-    font-size: 18px;
-}
-
-.game-title {
-    font-size: 42px;
-}
-
-.game-desc,
-.controls button,
-.status,
-.cat,
-.score-row,
-.pairing {
+.controls button {
+    background: #111;
+    color: #fff;
+    border: 1px solid #111;
+    padding: 9px 13px;
     font-size: 17px;
 }
 
+.controls button.danger {
+    background: #fff;
+    color: #111;
+}
+
+.controls button:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+}
+
+.status {
+    margin: 15px 0;
+    padding: 10px 12px;
+    background: #fff;
+    border: 1px solid #111;
+    line-height: 1.6;
+    font-size: 17px;
+}
+
+.yahtzee-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 14px;
+    margin-top: 20px;
+}
+
+.cat {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    background: #fff;
+    color: #111;
+    padding: 9px 10px;
+    border: 1px solid #111;
+    text-align: left;
+    font-size: 17px;
+}
+
+.cat.used {
+    background: #eee;
+    color: #777;
+}
+
 .total-box {
+    margin-top: 15px;
     font-size: 24px;
 }
 
-.sideboard h3 {
-    font-size: 20px;
+.seven-table {
+    display: flex;
+    gap: 9px;
+    flex-wrap: wrap;
+    min-height: 125px;
+    margin: 18px 0;
 }
+
+.num-card {
+    width: 73px;
+    height: 108px;
+    border-radius: 0;
+    background: #fff;
+    color: #111;
+    border: 1px solid #111;
+    display: grid;
+    place-items: center;
+    font: bold 34px Georgia;
+    box-shadow: none;
+}
+
+.num-card.mod {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+    font-size: 19px;
+}
+
+.num-card.bust {
+    background: #fff;
+    color: #111;
+    border: 4px double #111;
+}
+
+.big-score {
+    font-size: 42px;
+    font-weight: bold;
+    color: #111;
+}
+
+.cant-grid {
+    display: grid;
+    grid-template-columns: repeat(11, 1fr);
+    gap: 5px;
+    align-items: end;
+    height: 380px;
+    margin: 18px 0;
+}
+
+.col {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 2px;
+}
+
+.cell {
+    width: 100%;
+    min-width: 27px;
+    height: 22px;
+    background: #fff;
+    border: 1px solid #999;
+    position: relative;
+}
+
+.cell.player::after {
+    content: '●';
+    color: #111;
+    position: absolute;
+    inset: -2px 0 0;
+    text-align: center;
+}
+
+.cell.ai::before {
+    content: '○';
+    color: #111;
+    position: absolute;
+    inset: -2px 0 0;
+    text-align: center;
+}
+
+.cell.runner { box-shadow: inset 0 0 0 3px #111; }
 
 .col-label {
     font-size: 15px;
+    margin-top: 4px;
+    color: #111;
 }
-.meeple.hyunsu {
+
+.claimed {
+    color: #111;
+    font-weight: bold;
+}
+
+.pairings {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 12px 0;
+}
+
+.pairing {
+    padding: 8px 11px;
+    background: #fff;
+    color: #111;
+    border: 1px solid #111;
+    font-size: 17px;
+}
+
+.pairing:disabled { opacity: .35; }
+
+/* ===== NOTEBOOK / LETTER ===== */
+
+.notebook-page {
+    position: relative;
+    z-index: 3;
+    min-height: 100vh;
+    background: #f3f3f3;
+    padding: 90px 20px 40px;
+    color: #111;
+}
+
+.book {
+    max-width: 1050px;
+    margin: auto;
+    background: #fff;
+    color: #111;
+    min-height: 760px;
+    border: 1px solid #111;
+    box-shadow: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    font-family: 'NostalgicGukhanbakLovely', 'Noto Sans KR', sans-serif;
+}
+
+.book::after {
+    content: '';
+    position: absolute;
     left: 50%;
-    top: 14%;
-    right: auto;
-    bottom: auto;
-    transform: translateX(-50%);
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: #111;
 }
 
-.meeple.somi {
-    left: 19%;
-    top: 31%;
-    right: auto;
-    bottom: auto;
-    transform: rotate(3deg);
+.page {
+    padding: 42px 45px;
+    background: #fff;
 }
 
-.meeple.host {
-    left: auto;
-    right: 23%;
-    top: 31%;
-    bottom: auto;
-    transform: rotate(-3deg);
+.page h2,
+.page h3 {
+    font-family: 'NostalgicGukhanbakLovely', 'Noto Sans KR', sans-serif;
+    font-style: normal;
 }
 
-.meeple.sugang {
-    left: 15%;
-    top: 62%;
-    right: auto;
-    bottom: auto;
-    transform: rotate(-4deg);
+.leader-table {
+    font-family: 'NostalgicGukhanbakLovely', 'Noto Sans KR', sans-serif;
+    font-style: normal;
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.meeple.sieun {
-    left: auto;
-    right: 14%;
-    top: 61%;
-    bottom: auto;
-    transform: rotate(4deg);
+.leader-table td,
+.leader-table th {
+    padding: 9px 5px;
+    border-bottom: 1px solid #111;
+    text-align: left;
 }
 
-.dice-object {
-    left: 36%;
-    top: 38%;
-    right: auto;
-    bottom: auto;
-    transform: rotate(-7deg);
+.tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
 }
 
-.cards-object {
-    left: 50%;
-    top: 35%;
-    right: auto;
-    bottom: auto;
-    transform: rotate(6deg);
+.tabs button {
+    border: 1px solid #111;
+    background: #fff;
+    color: #111;
+    padding: 7px 10px;
 }
 
-.box-object {
-    left: 30%;
-    top: 55%;
-    right: auto;
-    bottom: auto;
-    transform: rotate(-5deg);
+.tabs button:hover {
+    background: #111;
+    color: #fff;
 }
 
-.notebook-object {
-    left: 53%;
-    top: 55%;
-    right: auto;
-    bottom: auto;
-    transform: rotate(5deg);
+.guest-form textarea {
+    width: 100%;
+    min-height: 90px;
+    background: #fff;
+    border: 1px solid #111;
+    padding: 8px;
 }
+
+.guestbook-item {
+    padding: 18px 0 22px;
+    border-bottom: 1px solid #111;
+    line-height: 1.9;
+}
+
+.guestbook-item b {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.guestbook-item .meta {
+    font-size: 12px;
+    color: #666;
+    margin-top: 8px;
+}
+
+.pencil-button {
+    background: #111;
+    color: #fff;
+    border: 1px solid #111;
+    padding: 8px 11px;
+    margin-top: 7px;
+}
+
+.letter-route {
+    position: relative;
+    z-index: 3;
+    min-height: 100vh;
+    background: #f3f3f3;
+    padding: 90px 20px;
+}
+
+.letter-paper {
+    max-width: 760px;
+    min-height: 700px;
+    margin: auto;
+    background: #fff;
+    color: #111;
+    border: 1px solid #111;
+    padding: 60px 70px;
+    box-shadow: none;
+    line-height: 2;
+    font-family: 'NostalgicGukhanbakLovely', 'Noto Serif KR', serif;
+}
+
+.letter-paper h1 {
+    font-size: 27px;
+    margin-top: 0;
+}
+
 .letter-paper p {
     font-size: 24px;
     line-height: 1.8;
 }
 
-/* ===== HOME LAYOUT 2026-09-01 ===== */
-.home-stage{
-    width:100vw;
-    height:100vh;
-    min-height:720px;
-    transform:none;
-    transform-origin:center top;
-}
-.home-stage .object{z-index:5}
-.home-stage .object > button{position:relative;z-index:2;display:block}
-.home-stage .object img,
-.home-stage .dice-stack,
-.home-stage .card-stack,
-.home-stage .trpg-folder{pointer-events:none}
-
-/* 미플 배치: 왼쪽부터 수강 - 소미 - 현수 - 준희 - 시은 */
-.meeple.sugang{
-    left:20%; top:28%; right:auto; bottom:auto;
-    transform:rotate(-4deg);
-}
-.meeple.somi{
-    left:34%; top:24%; right:auto; bottom:auto;
-    transform:rotate(3deg);
-}
-.meeple.hyunsu{
-    left:50%; top:22%; right:auto; bottom:auto;
-    transform:translateX(-50%);
-}
-.meeple.host{
-    left:auto; right:34%; top:24%; bottom:auto;
-    transform:rotate(-3deg);
-}
-.meeple.sieun{
-    left:auto; right:20%; top:28%; bottom:auto;
-    transform:rotate(4deg);
+.letter-placeholder {
+    opacity: .45;
+    border: 1px dashed #777;
+    padding: 10px;
 }
 
-/* 게임 오브젝트: 가운데에 2 + 3 형태로 모음 */
-.dice-object{
-    left:37%; top:42%; right:auto; bottom:auto;
-    transform:rotate(-7deg);
-}
-.cards-object{
-    left:51%; top:40%; right:auto; bottom:auto;
-    transform:rotate(6deg);
-}
-.box-object{
-    left:29%; top:59%; right:auto; bottom:auto;
-    transform:rotate(-5deg);
-}
-.notebook-object{
-    left:47%; top:58%; right:auto; bottom:auto;
-    transform:rotate(5deg);
+.toast {
+    position: fixed;
+    z-index: 2000;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #111;
+    color: #fff;
+    padding: 10px 15px;
+    border: 1px solid #fff;
 }
 
-/* 중간 폭 PC: 통째로 축소하지 않고 중앙 배치를 유지 */
-@media (max-width:1200px){
-    .home-stage{transform:none;min-height:700px}
-    .meeple{width:112px}
-    .meeple.sugang{left:12%;top:28%}
-    .meeple.somi{left:32%;top:24%}
-    .meeple.hyunsu{left:50%;top:22%}
-    .meeple.host{right:32%;top:24%}
-    .meeple.sieun{right:12%;top:28%}
-    .dice-object{left:36%;top:42%;width:115px}
-    .cards-object{left:52%;top:40%;width:105px}
-    .box-object{left:27%;top:59%;width:165px}
-    .notebook-object{left:51%;top:58%;width:155px}
+/* ===== RESPONSIVE ===== */
+
+/* 중간 폭 PC: 좌표 기준은 그대로, 크기만 줄여 자연스럽게 압축 */
+@media (max-width: 1200px) {
+    .home-stage {
+        min-height: 700px;
+        transform: none;
+    }
+
+    .meeple { width: 112px; }
+
+    .dice-object {
+        left: 36%;
+        top: 42%;
+        width: 115px;
+    }
+
+    .cards-object {
+        left: 52%;
+        top: 40%;
+        width: 105px;
+    }
+
+    .box-object {
+        left: 27%;
+        top: 59%;
+        width: 165px;
+    }
+
+    .notebook-object {
+        left: 51%;
+        top: 58%;
+        width: 155px;
+    }
 }
 
-@media (max-width:900px){
-    .home-stage{width:100vw;height:760px;min-height:760px;margin-left:0;transform:none}
-    .meeple{width:96px}
-    .meeple.sugang{left:6%;top:28%}
-    .meeple.somi{left:29%;top:23%}
-    .meeple.hyunsu{left:50%;top:21%}
-    .meeple.host{right:29%;top:23%}
-    .meeple.sieun{right:6%;top:28%}
-    .dice-object{left:33%;top:42%;width:105px}
-    .cards-object{left:53%;top:40%;width:96px}
-    .box-object{left:19%;top:59%;width:145px}
-    .notebook-object{left:49%;top:58%;width:138px}
+@media (max-width: 900px) {
+    .game-shell {
+        padding: 90px 18px 390px;
+    }
+
+    .sideboard {
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        top: auto;
+        bottom: 20px;
+        width: auto;
+    }
+
+    .book {
+        grid-template-columns: 1fr;
+    }
+
+    .book::after { display: none; }
+
+    .home-stage {
+        width: 100vw;
+        height: 760px;
+        min-height: 760px;
+        margin-left: 0;
+        transform: none;
+    }
+
+    .meeple { width: 96px; }
+
+    .dice-object {
+        left: 33%;
+        top: 42%;
+        width: 105px;
+    }
+
+    .cards-object {
+        left: 53%;
+        top: 40%;
+        width: 96px;
+    }
+
+    .box-object {
+        left: 19%;
+        top: 59%;
+        width: 145px;
+    }
+
+    .notebook-object {
+        left: 49%;
+        top: 58%;
+        width: 138px;
+    }
 }
 
-@media (max-width:600px){
-    .home-stage{width:100vw;height:680px;min-height:680px;margin-left:0;transform:none}
-    .meeple{width:78px}
-    .meeple.sugang{left:2%;top:28%}
-    .meeple.somi{left:25%;top:23%}
-    .meeple.hyunsu{left:50%;top:21%}
-    .meeple.host{right:25%;top:23%}
-    .meeple.sieun{right:2%;top:28%}
-    .dice-object{left:27%;top:41%;width:92px}
-    .cards-object{left:52%;top:39%;width:84px}
-    .box-object{left:7%;top:58%;width:125px}
-    .notebook-object{left:39%;top:57%;width:120px}
+@media (max-width: 600px) {
+    .home-stage {
+        width: 100vw;
+        height: 680px;
+        min-height: 680px;
+        margin-left: 0;
+        transform: none;
+    }
+
+    /* 모바일도 전부 left 기준.
+       겹치지 않게 폭을 줄이고 간격만 넓힘. */
+    .meeple { width: 64px; }
+
+    .meeple.sugang {
+        left: 14%;
+        top: 25%;
+    }
+
+    .meeple.somi {
+        left: 32%;
+        top: 22%;
+    }
+
+    .meeple.hyunsu {
+        left: 50%;
+        top: 20%;
+    }
+
+    .meeple.host {
+        left: 68%;
+        top: 22%;
+    }
+
+    .meeple.sieun {
+        left: 86%;
+        top: 25%;
+    }
+
+    .dice-object {
+        left: 27%;
+        top: 41%;
+        width: 92px;
+    }
+
+    .cards-object {
+        left: 52%;
+        top: 39%;
+        width: 84px;
+    }
+
+    .box-object {
+        left: 7%;
+        top: 58%;
+        width: 125px;
+    }
+
+    .notebook-object {
+        left: 39%;
+        top: 57%;
+        width: 120px;
+    }
+
+    .game-panel { padding: 16px; }
+
+    .yahtzee-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cant-grid {
+        gap: 2px;
+        height: 310px;
+    }
+
+    .cell {
+        min-width: 18px;
+        height: 18px;
+    }
+
+    .letter-paper {
+        padding: 35px 25px;
+    }
+
+    .topbar .brand { display: none; }
 }
