@@ -83,6 +83,7 @@ async function render(){
   else if(r==='yahtzee')yahtzee();
   else if(r==='seven')seven();
   else if(r==='cantstop')cantstop();
+  else if(r==='trpg')trpg();
   else if(r==='leaderboard')leaderboard();
   else if(r.startsWith('letter'))letter(r.split('/')[1]||user.id);
   else navigate('home')
@@ -149,6 +150,13 @@ function home(){
           </button>
         </div>
 
+        <div class="object trpg-home-object">
+          <button id="goTrpg">
+            <div class="trpg-folder" aria-hidden="true"></div>
+            <span class="object-label">TRPG</span>
+          </button>
+        </div>
+
         <div class="object notebook-object">
           <button id="goLeader">
             <img class="record-note-img" src="assets/record-note.png" alt="기록 노트">
@@ -165,6 +173,7 @@ function home(){
   $('#goYahtzee').onclick=()=>navigate('yahtzee');
   $('#goSeven').onclick=()=>navigate('seven');
   $('#goCant').onclick=()=>navigate('cantstop');
+  $('#goTrpg').onclick=()=>navigate('trpg');
   $('#goLeader').onclick=()=>navigate('leaderboard');
 
   $$('.meeple').forEach(el=>{
@@ -199,6 +208,21 @@ function showSpeech(el,id){
   setTimeout(()=>{
     if(s.isConnected)s.remove()
   },5000)
+}
+
+/* =========================
+   ASYNC TRPG
+========================= */
+
+function trpg(){
+  window.TRPG.open({
+    user,
+    topbar,
+    bindTop,
+    navigate,
+    esc,
+    toast
+  })
 }
 
 /* =========================
