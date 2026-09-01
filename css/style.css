@@ -100,16 +100,16 @@
 }
 
 .meeple.host {
-    left: 26%;
-    top: 25%;
+    left: 30%;
+    top: 20%;
     right: auto;
     bottom: auto;
     transform: rotate(-5deg);
 }
 
 .meeple.somi {
-    left: 11%;
-    top: 31%;
+    left: 7%;
+    top: 22%;
     right: auto;
     bottom: auto;
     transform: rotate(4deg);
@@ -117,7 +117,7 @@
 
 .meeple.sieun {
     left: auto;
-    right: 15%;
+    right: 9%;
     top: 23%;
     bottom: auto;
     transform: rotate(6deg);
@@ -133,7 +133,7 @@
 
 .meeple.sugang {
     left: auto;
-    right: 16%;
+    right: 9%;
     top: auto;
     bottom: 20%;
     transform: rotate(5deg);
