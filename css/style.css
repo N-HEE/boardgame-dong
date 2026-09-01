@@ -100,8 +100,9 @@
 }
 
 .meeple.host {
-    left: 30%;
-    top: 20%;
+    left: auto;
+    right: 8%;
+    top: 15%;
     right: auto;
     bottom: auto;
     transform: rotate(-5deg);
@@ -109,7 +110,7 @@
 
 .meeple.somi {
     left: 7%;
-    top: 22%;
+    top: 15%;
     right: auto;
     bottom: auto;
     transform: rotate(4deg);
