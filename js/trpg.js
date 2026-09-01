@@ -1,4 +1,4 @@
-const TRPG = (()=>{
+window.TRPG = (()=>{
   let ui=null;
   let scenario=null;
   let data={campaign:null,player:null,players:[],logs:[],votes:[],memo:null};
@@ -259,7 +259,8 @@ const TRPG = (()=>{
 
   function logsHtml(logs){
     if(!logs.length)return '<p>아직 기록이 없습니다.</p>';
-    return logs.map(l=>`
+    const ordered=[...logs].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+    return ordered.map(l=>`
       <div class="trpg-log">
         <div><b>${esc(l.user_name||'여행일지')}</b><span>${formatDate(l.created_at)}</span></div>
         <p>${esc(l.message)}</p>
@@ -576,4 +577,3 @@ const TRPG = (()=>{
   return {open,roll5,kstDate};
 })();
 
-window.TRPG=TRPG;
