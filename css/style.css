@@ -350,6 +350,48 @@ button { cursor: pointer; }
     transform: rotate(12deg);
 }
 
+
+/* TRPG CASE: 홈 오브젝트 */
+.trpg-home-object {
+    left: 65%;
+    top: 59%;
+    width: 170px;
+    z-index: 6;
+}
+
+.trpg-folder {
+    position: relative;
+    width: 160px;
+    height: 105px;
+    background: #c8aa79;
+    border: 1px solid #6d5738;
+    box-shadow: 0 10px 10px #0007;
+    transform: rotate(-3deg);
+}
+
+.trpg-folder::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: -17px;
+    width: 68px;
+    height: 18px;
+    background: #c8aa79;
+    border: 1px solid #6d5738;
+    border-bottom: 0;
+}
+
+.trpg-folder::after {
+    content: 'CASE';
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #302719;
+    font: 700 20px Georgia, serif;
+    letter-spacing: .16em;
+}
+
 /* 말풍선 */
 .speech {
     position: absolute;
@@ -916,6 +958,17 @@ button { cursor: pointer; }
         top: 58%;
         width: 155px;
     }
+
+    .trpg-home-object {
+        left: 69%;
+        top: 59%;
+        width: 150px;
+    }
+
+    .trpg-folder {
+        width: 145px;
+        height: 95px;
+    }
 }
 
 @media (max-width: 900px) {
@@ -970,6 +1023,17 @@ button { cursor: pointer; }
         left: 49%;
         top: 58%;
         width: 138px;
+    }
+
+    .trpg-home-object {
+        left: 72%;
+        top: 59%;
+        width: 135px;
+    }
+
+    .trpg-folder {
+        width: 130px;
+        height: 86px;
     }
 }
 
@@ -1033,6 +1097,28 @@ button { cursor: pointer; }
         left: 39%;
         top: 57%;
         width: 120px;
+    }
+
+    .trpg-home-object {
+        left: 70%;
+        top: 57%;
+        width: 112px;
+    }
+
+    .trpg-folder {
+        width: 108px;
+        height: 72px;
+    }
+
+    .trpg-folder::before {
+        left: 7px;
+        top: -13px;
+        width: 48px;
+        height: 14px;
+    }
+
+    .trpg-folder::after {
+        font-size: 15px;
     }
 
     .game-panel { padding: 16px; }
