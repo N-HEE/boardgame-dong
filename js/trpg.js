@@ -209,12 +209,35 @@ const TRPG = (()=>{
 
   function memoBlock(){
     return `
-      <section class="trpg-memo">
-        <h3>MEMO</h3>
-        <textarea id="trpgMemo" maxlength="4000" placeholder="다섯 명이 같이 쓰는 메모지">${esc(data.memo?.content||'')}</textarea>
-        <button id="saveMemo">메모 저장</button>
-        <small>${data.memo?.updated_at?`마지막 저장 ${formatDate(data.memo.updated_at)}`:'아직 저장된 메모가 없습니다.'}</small>
-      </section>
+      <details class="trpg-memo trpg-fold" open>
+        <summary>메모</summary>
+        <div class="trpg-fold-body">
+          <textarea id="trpgMemo" maxlength="4000" placeholder="다섯 명이 같이 쓰는 메모지">${esc(data.memo?.content||'')}</textarea>
+          <button id="saveMemo">메모 저장</button>
+          <small>${data.memo?.updated_at?`마지막 저장 ${formatDate(data.memo.updated_at)}`:'아직 저장된 메모가 없습니다.'}</small>
+        </div>
+      </details>
+    `
+  }
+
+  function cluesBlock(){
+    return `
+      <details class="trpg-clues trpg-fold" open>
+        <summary>발견한 단서</summary>
+        <div class="trpg-fold-body">${cluesHtml()}</div>
+      </details>
+    `
+  }
+
+  function partyBlock(){
+    return `
+      <details class="trpg-status-card trpg-fold" open>
+        <summary>보겜동</summary>
+        <div class="trpg-fold-body">
+          <div class="trpg-number-rule">모든 판정은 주사위를 5개 굴렸을 때 자신이 담당한 눈의 개수가 목표 이상으로 떠야 함. 6은 모든 눈으로 취급한다.</div>
+          ${data.players.sort((a,b)=>a.assigned_number-b.assigned_number).map(playerCard).join('')}
+        </div>
+      </details>
     `
   }
 
@@ -236,7 +259,7 @@ const TRPG = (()=>{
 
   function logsHtml(logs){
     if(!logs.length)return '<p>아직 기록이 없습니다.</p>';
-    return logs.slice().reverse().map(l=>`
+    return logs.map(l=>`
       <div class="trpg-log">
         <div><b>${esc(l.user_name||'여행일지')}</b><span>${formatDate(l.created_at)}</span></div>
         <p>${esc(l.message)}</p>
@@ -254,7 +277,7 @@ const TRPG = (()=>{
       root.innerHTML=`
         <div class="trpg-layout ended">
           <section class="trpg-main">${bookBlock()}</section>
-          <aside class="trpg-side">${memoBlock()}<section class="trpg-clues"><h3>발견한 단서</h3>${cluesHtml()}</section></aside>
+          <aside class="trpg-side">${partyBlock()}${memoBlock()}${cluesBlock()}</aside>
         </div>
       `;
       bindCommon();
@@ -294,13 +317,9 @@ const TRPG = (()=>{
         </section>
 
         <aside class="trpg-side">
-          <section class="trpg-status-card">
-            <h3>여행단</h3>
-            <div class="trpg-number-rule">판정: 5D6 · 자기 숫자와 6이 성공 눈</div>
-            ${data.players.sort((a,b)=>a.assigned_number-b.assigned_number).map(playerCard).join('')}
-          </section>
-          <section class="trpg-clues"><h3>발견한 단서</h3>${cluesHtml()}</section>
+          ${partyBlock()}
           ${memoBlock()}
+          ${cluesBlock()}
         </aside>
       </div>
     `;
