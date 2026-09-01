@@ -214,15 +214,57 @@ function showSpeech(el,id){
    ASYNC TRPG
 ========================= */
 
-function trpg(){
-  window.TRPG.open({
-    user,
-    topbar,
-    bindTop,
-    navigate,
-    esc,
-    toast
+function loadExternalScript(src, ready){
+  return new Promise((resolve,reject)=>{
+    if(ready()) return resolve();
+    const s=document.createElement('script');
+    s.src=src+(src.includes('?')?'&':'?')+'v=20260901c';
+    s.onload=()=>ready()?resolve():reject(new Error('스크립트가 로드됐지만 준비되지 않았습니다: '+src));
+    s.onerror=()=>reject(new Error('스크립트를 불러오지 못했습니다: '+src));
+    document.head.appendChild(s);
   })
+}
+
+async function trpg(){
+  try{
+    if(!window.TRPG_SCENARIOS?.['haunted-house']){
+      await loadExternalScript(
+        'data/trpg-haunted-house.js',
+        ()=>!!window.TRPG_SCENARIOS?.['haunted-house']
+      );
+    }
+
+    if(!window.TRPG?.open){
+      await loadExternalScript(
+        'js/trpg.js',
+        ()=>!!window.TRPG?.open
+      );
+    }
+
+    await window.TRPG.open({
+      user,
+      topbar,
+      bindTop,
+      navigate,
+      esc,
+      toast
+    });
+  }catch(e){
+    console.error(e);
+    $('#app').innerHTML=`
+      <main class="route">
+        <button class="back-btn" id="back">← 테이블</button>
+        ${topbar()}
+        <div class="game-shell">
+          <section class="game-panel">
+            <h1 class="game-title">TRPG 로딩 오류</h1>
+            <p class="game-desc">TRPG 파일을 불러오지 못했습니다. 새로고침 후 다시 시도해 주세요.</p>
+          </section>
+        </div>
+      </main>`;
+    bindTop();
+    $('#back').onclick=()=>navigate('home');
+  }
 }
 
 /* =========================
