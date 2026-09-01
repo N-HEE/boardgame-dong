@@ -275,3 +275,101 @@
     font-size: 24px;
     line-height: 1.8;
 }
+
+/* ===== HOME LAYOUT 2026-09-01 ===== */
+.home-stage{
+    width:100vw;
+    height:100vh;
+    min-height:720px;
+    transform:none;
+    transform-origin:center top;
+}
+.home-stage .object{z-index:5}
+.home-stage .object > button{position:relative;z-index:2;display:block}
+.home-stage .object img,
+.home-stage .dice-stack,
+.home-stage .card-stack,
+.home-stage .trpg-folder{pointer-events:none}
+
+/* 사람: 현수는 기존 상단 중앙 유지, 나머지 네 명은 위쪽으로 모음 */
+.meeple.hyunsu{
+    left:50%; top:14%; right:auto; bottom:auto;
+    transform:translateX(-50%);
+}
+.meeple.somi{
+    left:28%; top:29%; right:auto; bottom:auto;
+    transform:rotate(3deg);
+}
+.meeple.sugang{
+    left:39%; top:25%; right:auto; bottom:auto;
+    transform:rotate(-4deg);
+}
+.meeple.sieun{
+    left:auto; right:36%; top:25%; bottom:auto;
+    transform:rotate(4deg);
+}
+.meeple.host{
+    left:auto; right:24%; top:29%; bottom:auto;
+    transform:rotate(-3deg);
+}
+
+/* 게임 오브젝트: 가운데에 2 + 3 형태로 모음 */
+.dice-object{
+    left:37%; top:42%; right:auto; bottom:auto;
+    transform:rotate(-7deg);
+}
+.cards-object{
+    left:51%; top:40%; right:auto; bottom:auto;
+    transform:rotate(6deg);
+}
+.box-object{
+    left:29%; top:59%; right:auto; bottom:auto;
+    transform:rotate(-5deg);
+}
+.notebook-object{
+    left:47%; top:58%; right:auto; bottom:auto;
+    transform:rotate(5deg);
+}
+
+/* 중간 폭 PC: 통째로 축소하지 않고 중앙 배치를 유지 */
+@media (max-width:1200px){
+    .home-stage{transform:none;min-height:700px}
+    .meeple{width:112px}
+    .meeple.hyunsu{left:50%;top:13%}
+    .meeple.somi{left:20%;top:30%}
+    .meeple.sugang{left:34%;top:25%}
+    .meeple.sieun{right:31%;top:25%}
+    .meeple.host{right:18%;top:30%}
+    .dice-object{left:36%;top:42%;width:115px}
+    .cards-object{left:52%;top:40%;width:105px}
+    .box-object{left:27%;top:59%;width:165px}
+    .notebook-object{left:51%;top:58%;width:155px}
+}
+
+@media (max-width:900px){
+    .home-stage{width:100vw;height:760px;min-height:760px;margin-left:0;transform:none}
+    .meeple{width:96px}
+    .meeple.hyunsu{left:50%;top:12%}
+    .meeple.somi{left:12%;top:29%}
+    .meeple.sugang{left:31%;top:23%}
+    .meeple.sieun{right:28%;top:23%}
+    .meeple.host{right:10%;top:29%}
+    .dice-object{left:33%;top:42%;width:105px}
+    .cards-object{left:53%;top:40%;width:96px}
+    .box-object{left:19%;top:59%;width:145px}
+    .notebook-object{left:49%;top:58%;width:138px}
+}
+
+@media (max-width:600px){
+    .home-stage{width:100vw;height:680px;min-height:680px;margin-left:0;transform:none}
+    .meeple{width:78px}
+    .meeple.hyunsu{left:50%;top:11%}
+    .meeple.somi{left:5%;top:28%}
+    .meeple.sugang{left:27%;top:22%}
+    .meeple.sieun{right:25%;top:22%}
+    .meeple.host{right:4%;top:28%}
+    .dice-object{left:27%;top:41%;width:92px}
+    .cards-object{left:52%;top:39%;width:84px}
+    .box-object{left:7%;top:58%;width:125px}
+    .notebook-object{left:39%;top:57%;width:120px}
+}
