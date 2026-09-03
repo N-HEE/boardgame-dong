@@ -28,7 +28,7 @@ window.TRPG = (()=>{
   }
 
   function difficultyLabel(n){
-    return n===2?'쉬움':n===4?'어려움':'보통'
+    return n===1?'쉬움':n===3?'어려움':'보통'
   }
 
   function state(){
